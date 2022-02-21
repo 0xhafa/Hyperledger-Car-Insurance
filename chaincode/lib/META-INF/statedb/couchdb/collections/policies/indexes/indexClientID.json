@@ -1,0 +1,9 @@
+{
+    "index": {
+        "fields": [
+            "ClientID"
+        ]
+    },
+    "name": "indexClientID",
+    "type": "json"
+}

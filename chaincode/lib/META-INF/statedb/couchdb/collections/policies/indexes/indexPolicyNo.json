@@ -1,0 +1,9 @@
+{
+    "index": {
+        "fields": [
+            "PolicyNo"
+        ]
+    },
+    "name": "indexPolicyNo",
+    "type": "json"
+}
