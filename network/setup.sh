@@ -36,7 +36,7 @@ peer lifecycle chaincode queryinstalled
 
 # approve the deployed chaincode for the second insurance company 
 export CC_PACKAGE_ID=$(peer lifecycle chaincode queryinstalled | grep 'insurance:[a-f0-9]*' -o)
-peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name insurance --version 1.0 --collections-config ../chaincode/collections_config.json --signature-policy "OR('InsuranceCompany1.peer','InsuranceCompany2.peer')" --package-id $CC_PACKAGE_ID --sequence 1 --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
+peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID insuranceChannel --name insurance --version 1.0 --collections-config ../chaincode/collections_config.json --signature-policy "OR('InsuranceCompany1.peer','InsuranceCompany2.peer')" --package-id $CC_PACKAGE_ID --sequence 1 --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
 
 # approve the deployed chaincode for the first insurance company 
 export CORE_PEER_LOCALMSPID="InsuranceCompany1"
@@ -44,14 +44,14 @@ export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/InsuranceC
 export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/peerOrganizations/InsuranceCompany1.example.com/peers/peer0.InsuranceCompany1.example.com/tls/ca.crt
 export CORE_PEER_ADDRESS=localhost:7051
 
-peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name insurance --version 1.0 --collections-config ../chaincode/collections_config.json --signature-policy "OR('InsuranceCompany1.peer','InsuranceCompany2.peer')" --package-id $CC_PACKAGE_ID --sequence 1 --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
+peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID insuranceChannel --name insurance --version 1.0 --collections-config ../chaincode/collections_config.json --signature-policy "OR('InsuranceCompany1.peer','InsuranceCompany2.peer')" --package-id $CC_PACKAGE_ID --sequence 1 --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
 
 # commit the chaincode
-peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name insurance --version 1.0 --sequence 1 --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" --output json
-peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name insurance --version 1.0 --sequence 1 --collections-config ../chaincode/collections_config.json --signature-policy "OR('InsuranceCompany1.peer','InsuranceCompany2.peer')" --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" --peerAddresses localhost:7051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/InsuranceCompany1.example.com/peers/peer0.InsuranceCompany1.example.com/tls/ca.crt" --peerAddresses localhost:9051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/InsuranceCompany2.example.com/peers/peer0.InsuranceCompany2.example.com/tls/ca.crt"
+peer lifecycle chaincode checkcommitreadiness --channelID insuranceChannel --name insurance --version 1.0 --sequence 1 --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" --output json
+peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID insuranceChannel --name insurance --version 1.0 --sequence 1 --collections-config ../chaincode/collections_config.json --signature-policy "OR('InsuranceCompany1.peer','InsuranceCompany2.peer')" --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" --peerAddresses localhost:7051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/InsuranceCompany1.example.com/peers/peer0.InsuranceCompany1.example.com/tls/ca.crt" --peerAddresses localhost:9051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/InsuranceCompany2.example.com/peers/peer0.InsuranceCompany2.example.com/tls/ca.crt"
 
 # query if chaincode commited - optional
-peer lifecycle chaincode querycommitted --channelID mychannel --name insurance --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
+peer lifecycle chaincode querycommitted --channelID insuranceChannel --name insurance --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
 
 
 #export PATH=${PWD}/../bin:${PWD}:$PATH
@@ -68,4 +68,4 @@ peer lifecycle chaincode querycommitted --channelID mychannel --name insurance -
 #export CORE_PEER_ADDRESS=localhost:7051
 #
 #export POLICY=$(echo -n "{\"color\":\"blue\",\"size\":30,\"appraisedValue\":100}" | base64 | tr -d \\n)
-#peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" -C mychannel -n insurance --peerAddresses localhost:7051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/InsuranceCompany1.example.com/peers/peer0.InsuranceCompany1.example.com/tls/ca.crt" -c '{"function":"SubmitPolicy","Args":[]}' --transient "{\"policy\":\"$POLICY\"}"
+#peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" -C insuranceChannel -n insurance --peerAddresses localhost:7051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/InsuranceCompany1.example.com/peers/peer0.InsuranceCompany1.example.com/tls/ca.crt" -c '{"function":"SubmitPolicy","Args":[]}' --transient "{\"policy\":\"$POLICY\"}"
