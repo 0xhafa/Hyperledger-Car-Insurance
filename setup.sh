@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # install backend dependencies
-#cd ./backend
-#npm install
-#cd ..
+cd ./backend
+npm install
+cd ..
 
 cd ./network
 
