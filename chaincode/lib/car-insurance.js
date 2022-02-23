@@ -28,7 +28,7 @@ class CarInsurance extends Contract {
     * @param policy    Customer's policy object.
     * @return Standard policy object.
     */
-    async ConformPolicy(policy) {
+    ConformPolicy(policy) {
         return Object.fromEntries([
             ['StartDate', policy.StartDate],
             ['EndDate', policy.EndDate],
@@ -135,20 +135,20 @@ class CarInsurance extends Contract {
     */
     async ActivatePolicy(ctx, policyNo) {
         const policy = await this.ReadPolicy(ctx, policyNo);
-
-        if(policy.State !== POLICY_STATE.PENDING && policy.state !== POLICY_STATE.SUSPENDED) {
+        
+        if(policy.State !== POLICY_STATE.PENDING && policy.State !== POLICY_STATE.SUSPENDED) {
             throw new Error(`The policy ${policyNo} is not in pending nor suspended state`);
         }
 
         if(policy.State === POLICY_STATE.PENDING) {
-            this.AuthorizeRole(ctx, policyNo, 'worker');
+            await this.AuthorizeRole(ctx, policyNo, 'worker');
         } else {
-            this.AuthorizeRole(ctx, policyNo, 'manager');
+            await this.AuthorizeRole(ctx, policyNo, 'manager');
         }
 
         policy.State = POLICY_STATE.ACTIVE;
         await ctx.stub.putPrivateData("policies", policyNo, JSON.stringify(policy));
-        return await this.WritePolicyMetadata(ctx, policy);
+        return this.CalculatePolicyHash(policy);
     }
 
     /*
@@ -158,7 +158,7 @@ class CarInsurance extends Contract {
     * @return Hash of the expired policy.
     */
     async ExpirePolicy(ctx, policyNo) {
-        this.AuthorizeRole(ctx, policyNo, 'worker');
+        await this.AuthorizeRole(ctx, policyNo, 'worker');
         const policy = await this.ReadPolicy(ctx, policyNo);
 
         if(policy.State !== POLICY_STATE.ACTIVE && policy.state !== POLICY_STATE.SUSPENDED) {
@@ -171,7 +171,7 @@ class CarInsurance extends Contract {
 
         policy.State = POLICY_STATE.EXPIRED;
         await ctx.stub.putPrivateData("policies", policyNo, JSON.stringify(policy));
-        return await this.WritePolicyMetadata(ctx, policy);
+        return this.CalculatePolicyHash(policy);
     }
 
     /*
@@ -181,7 +181,7 @@ class CarInsurance extends Contract {
     * @return Hash of the suspended policy.
     */
     async SuspendPolicy(ctx, policyNo) {
-        this.AuthorizeRole(ctx, policyNo, 'worker');
+        await this.AuthorizeRole(ctx, policyNo, 'worker');
         const policy = await this.ReadPolicy(ctx, policyNo);
 
         if(policy.State !== POLICY_STATE.ACTIVE) {
@@ -190,7 +190,7 @@ class CarInsurance extends Contract {
 
         policy.State = POLICY_STATE.SUSPENDED;
         await ctx.stub.putPrivateData("policies", policyNo, JSON.stringify(policy));
-        return await this.WritePolicyMetadata(ctx, policy);
+        return this.CalculatePolicyHash(policy);
     }    
 
     /*
@@ -199,10 +199,10 @@ class CarInsurance extends Contract {
     * @param policyNo   Policy number.
     * @param claimNo    Claim number.
     * @param newState   Accepted or Rejected state.
-    * @param amount     Coverage type to amount map
+    * @param amounts    Coverage type to amount map
     */
-    async ReviewClaim(ctx, policyNo, claimNo, newState, amount={}) {        
-        this.AuthorizeRole(ctx, policyNo, 'adjuster');
+    async ReviewClaim(ctx, policyNo, claimNo, newState, amounts) {     
+        await this.AuthorizeRole(ctx, policyNo, 'adjuster');
         const policy = await this.ReadPolicy(ctx, policyNo);
     
         const claimIndex = policy.Claims.findIndex(claim => claim.ClaimNo === claimNo);
@@ -214,20 +214,21 @@ class CarInsurance extends Contract {
             policy.Claims[claimIndex].State = CLAIM_STATE.REJECTED;
         } else if(newState === CLAIM_STATE.ACCEPTED) {
             policy.Claims[claimIndex].State = CLAIM_STATE.ACCEPTED;
+            policy.Claims[claimIndex].Amounts = {};
+            amounts = JSON.parse(amounts);
 
-            policy.Claims[claimIndex].Coverage = {};
-            for(const type in amount) {
+            for(const type in amounts) {
                 if(!policy.Coverage[type] || !policy.Coverage[type].Active) {
                     continue;
                 }
-                policy.Claims[claimIndex].Amount[type] = 
-                    (policy.Coverage[type].ClaimedToDate + parseFloat(amount[type]) >=
+                policy.Claims[claimIndex].Amounts[type] = 
+                    (policy.Coverage[type].ClaimedToDate + parseFloat(amounts[type]) >=
                     policy.Coverage[type].CoveredAmount) ? 
                     policy.Coverage[type].CoveredAmount - policy.Coverage[type].ClaimedToDate :
-                    parseFloat(amount[type]);
+                    parseFloat(amounts[type]);
             }
 
-            if(Object.keys(policy.Claims[claimIndex].Coverage).length === 0) {
+            if(Object.keys(policy.Claims[claimIndex].Amounts).length === 0) {
                 throw new Error(`Error while reviewing claim ${claimNo} of the policy ${policyNo}. Provide coverage types and amounts`);
             }
         } else {
@@ -245,7 +246,7 @@ class CarInsurance extends Contract {
     * @return Hash of the policy.
     */
     async PayoutClaim(ctx, policyNo, claimNo) {
-        this.AuthorizeRole(ctx, policyNo, 'bookkeeper');
+        await this.AuthorizeRole(ctx, policyNo, 'bookkeeper');
         const policy = await this.ReadPolicy(ctx, policyNo);
 
         if(policy.State !== POLICY_STATE.ACTIVE) {
@@ -260,15 +261,15 @@ class CarInsurance extends Contract {
         if(policy.Claims[claimIndex].State === CLAIM_STATE.ACCEPTED) {
             policy.Claims[claimIndex].State = CLAIM_STATE.PAID_OUT;
 
-            for(const type in policy.Claims[claimIndex].Amount) {
-                policy.Coverage[type].ClaimedToDate += policy.Claims[claimIndex].Amount[type];
+            for(const type in policy.Claims[claimIndex].Amounts) {
+                policy.Coverage[type].ClaimedToDate += policy.Claims[claimIndex].Amounts[type];
             }
         } else {
             throw new Error(`Cannot set the claim state to ${CLAIM_STATE.PAID_OUT} for claim ${claimNo} of the policy ${policyNo}`);
         }
 
         await ctx.stub.putPrivateData("policies", policyNo, JSON.stringify(policy));
-        return await this.WritePolicyMetadata(ctx, policy);
+        return this.CalculatePolicyHash(policy);
     }
 
     /*
@@ -277,10 +278,13 @@ class CarInsurance extends Contract {
     * @param policyNo   Policy number.
     * @return Hash of the policy.
     */
-    async WritePolicyMetadata(ctx, policyNo) {
-        this.AuthorizeRole(ctx, policyNo);
-        const policy = await this.ReadPolicy(ctx, policyNo);
-        const hash = await this.CalculatePolicyHash(policy);
+    async UpdatePolicyMetadata(ctx, policyNo) {
+        if (!(await this.PolicyExists(ctx, policyNo))) {
+            throw new Error(`The policy ${policyNo} does not exist`);
+        }
+
+        const policy = JSON.parse(await ctx.stub.getPrivateData("policies", policyNo));
+        const hash = this.CalculatePolicyHash(policy);
         await ctx.stub.putState(policy.PolicyNo, JSON.stringify({State: policy.State, Hash: hash}));
         return hash;
     }
@@ -292,7 +296,7 @@ class CarInsurance extends Contract {
     * @return Hash of the policy.
     */
     async ReadPolicyMetadata(ctx, policyNo) {
-        return JSON.parse(await ctx.stub.getState(policyNo).toString('utf8'));
+        return JSON.parse(await ctx.stub.getState(policyNo));
     }
 
     /*
@@ -301,7 +305,7 @@ class CarInsurance extends Contract {
     * @param policy     Policy object.
     * @return Hash of the policy.
     */
-    async CalculatePolicyHash(policy) {
+    CalculatePolicyHash(policy) {
         policy.Claims = [];
         return crypto.createHash('sha256').update(Buffer.from(JSON.stringify(policy))).digest('hex');
     }
@@ -332,7 +336,7 @@ class CarInsurance extends Contract {
             throw new Error(`The policy ${policyNo} does not exist`);
         }
 
-        if(!(this.IsAuthorizedToRead(ctx, policyNo))) {
+        if(!(await this.IsAuthorizedToRead(ctx, policyNo))) {
             throw new Error(`Client is not authorized to read the policy ${policyNo}`);
         }
 
@@ -356,13 +360,15 @@ class CarInsurance extends Contract {
     * @return True if authorized, false otherwise.
     */
     async IsAuthorizedToRead(ctx, policyNo) {
+        const authRoles = ['worker', 'manager', 'adjuster', 'bookkeeper', 'reader'];
         const policy = JSON.parse(await ctx.stub.getPrivateData("policies", policyNo));
         const clientMSPID = ctx.clientIdentity.getMSPID();
         const clientID = ctx.clientIdentity.getID();
+        const role = ctx.clientIdentity.getAttributeValue('role');
 
         if (clientMSPID === policy.InsuranceCompany &&
            (clientID    === policy.ClientID ||
-            ctx.clientIdentity.assertAttributeValue('role', 'reader'))) {
+            authRoles.includes(role))) {
             return true;
         }
         return false;
@@ -375,24 +381,19 @@ class CarInsurance extends Contract {
     * @param authRole     Desired client role.
     * @return True if condition fulfilled, throws error otherwise.
     */
-    async AuthorizeRole(ctx, policyNo, authRole='any') {
+    async AuthorizeRole(ctx, policyNo, authRole) {
         const policy = JSON.parse(await ctx.stub.getPrivateData("policies", policyNo));
         const clientMSPID = ctx.clientIdentity.getMSPID();
         const role = ctx.clientIdentity.getAttributeValue('role');
 
         let isAuthorized = false;
         if(authRole === role  || 
-           authRole === 'any' || 
           (authRole === 'worker' && role === 'manager')) {
             isAuthorized = true;
         }
-        
-        if(!ctx.clientIdentity.assertAttributeValue('affiliation', 'corporate')) {
-            isAuthorized = false;
-        }
 
         if (clientMSPID !== policy.InsuranceCompany || !isAuthorized) {
-            throw new Error(`Client ${clientMSPID} is not authorized to change the policy ${policyNo}`);
+            throw new Error(`Client ${clientMSPID}/${role} is not authorized to change the policy ${policyNo}`);
         }
 
         return true;
