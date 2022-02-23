@@ -50,12 +50,12 @@ exports.enrollAdmin = async (caClient, wallet, orgMspId) => {
 	}
 };
 
-exports.registerAndEnrollUser = async (caClient, wallet, orgMspId, userId, affiliation) => {
+exports.registerAndEnrollUser = async (caClient, wallet, orgMspId, user) => {
 	try {
 		// Check to see if we've already enrolled the user
-		const userIdentity = await wallet.get(userId);
+		const userIdentity = await wallet.get(user.userId);
 		if (userIdentity) {
-			console.log(`An identity for the user ${userId} already exists in the wallet`);
+			console.log(`An identity for the user ${user.userId} already exists in the wallet`);
 			return;
 		}
 
@@ -74,12 +74,13 @@ exports.registerAndEnrollUser = async (caClient, wallet, orgMspId, userId, affil
 		// Register the user, enroll the user, and import the new identity into the wallet.
 		// if affiliation is specified by client, the affiliation value must be configured in CA
 		const secret = await caClient.register({
-			affiliation: affiliation,
-			enrollmentID: userId,
-			role: 'client'
+			//affiliation: `${orgMspId}.${user.affiliation}`,
+			enrollmentID: user.userId,
+			role: user.type,
+			attrs: [{name: 'role', value: user.role, ecert: true}]
 		}, adminUser);
 		const enrollment = await caClient.enroll({
-			enrollmentID: userId,
+			enrollmentID: user.userId,
 			enrollmentSecret: secret
 		});
 		const x509Identity = {
@@ -90,8 +91,8 @@ exports.registerAndEnrollUser = async (caClient, wallet, orgMspId, userId, affil
 			mspId: orgMspId,
 			type: 'X.509',
 		};
-		await wallet.put(userId, x509Identity);
-		console.log(`Successfully registered and enrolled user ${userId} and imported it into the wallet`);
+		await wallet.put(user.userId, x509Identity);
+		console.log(`Successfully registered and enrolled user ${user.userId} and imported it into the wallet`);
 	} catch (error) {
 		console.error(`Failed to register user : ${error}`);
 	}

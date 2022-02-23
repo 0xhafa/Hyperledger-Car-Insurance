@@ -1,0 +1,44 @@
+[
+    {
+        "userId": "customer1",
+        "role": "customer",
+        "affiliation": "none",
+        "type": "client"
+    },
+    {
+        "userId": "customer2",
+        "role": "customer",
+        "affiliation": "none",
+        "type": "client"
+    },
+    {
+        "userId": "worker",
+        "role": "worker",
+        "affiliation": "corporate",
+        "type": "client"
+    },
+    {
+        "userId": "manager",
+        "role": "manager",
+        "affiliation": "corporate",
+        "type": "client"
+    },
+    {
+        "userId": "adjuster",
+        "role": "adjuster",
+        "affiliation": "corporate",
+        "type": "client"
+    },
+    {
+        "userId": "bookkeeper",
+        "role": "bookkeeper",
+        "affiliation": "corporate",
+        "type": "client"
+    },
+    {
+        "userId": "reader",
+        "role": "reader",
+        "affiliation": "corporate",
+        "type": "client"
+    }
+]
