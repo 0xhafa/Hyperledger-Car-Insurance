@@ -12,7 +12,7 @@ exports.addToJson = (fileName, newData) => {
       console.log("Data recorded");
     }
   })
-  return newData;
+  return json;
 }
 //
 exports.getJson = (fileName) => {

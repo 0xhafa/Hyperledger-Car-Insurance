@@ -2,31 +2,26 @@ import React, {useEffect, useState} from 'react'
 import Offers from './Offers';
 import QuoteForm from './QuoteForm';
 import Axios from 'axios';
+import { urlContext } from './urlContext';
 
 const Quotes = (props) => {
+  const url = React.useContext(urlContext);
   const [offers, setOffers] = useState([]);
 
-  useEffect(() => {
-    getOffers()
-  }, [])
+  function selectOffer(event) {
+    const offerId = event.target.id
+    setOffers(offers => {
+      let index = offers.findIndex(offer => offer.offerId == offerId);
+      offers[index].selected = true;
+      return offers;
+    })
 
-  async function selectOffer(event) {
-    const quoteId = event.target.id
-    await Axios.post("http://localhost:3001/selectOffer", {quoteId: quoteId})
-    getOffers()
-  }
-
-  function getOffers() {
-    Axios.get("http://localhost:3001/offers")
-    .then(res => {
-        setOffers(res.data);
-        console.log(res.data);
-    });
+    Axios.post(`${url}/selectOffer`, {offerId: offerId})
   }
 
   return (
     <div>
-      <QuoteForm user = {props.user}/>
+      <QuoteForm user = {props.user} setOffers={setOffers}/>
       { props.user == "Customer" ? <Offers offers={offers} selectOffer={selectOffer}/> : ""}
     </div>
   );

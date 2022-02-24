@@ -1,431 +1,155 @@
 [
-  [
-    {
-      "duration_years": 1,
-      "offer_details": "This is a mock up offer. There's no details available",
-      "price": 999,
-      "Coverage": {
-        "BodilyInjuryLiability": {
-          "Name": "Bodily Injury",
-          "Active": true,
-          "CoveredAmount": 9000,
-          "ClaimedToDate": 0
-        },
-        "PropertyDamageLiability": {
-          "Name": "Property Damage",
-          "Active": true,
-          "CoveredAmount": 15000,
-          "ClaimedToDate": 0
-        },
-        "Collision": {
-          "Name": "Collision",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        },
-        "Comprehensive": {
-          "Name": "Comprehensive",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        },
-        "PersonalInjuryProtection": {
-          "Name": "Personal Injury",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        },
-        "UnderinsuredMotorist": {
-          "Name": "Underinsured Motorist",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        }
+  {
+    "id": "21645678339867",
+    "user": "Customer",
+    "name": "",
+    "phone": "",
+    "email": "",
+    "description": "",
+    "duration_years": 1,
+    "offer_details": "This is a mock up offer. There's no details available",
+    "price": 999,
+    "Coverage": {
+      "BodilyInjuryLiability": {
+        "Name": "Bodily Injury",
+        "Active": true,
+        "CoveredAmount": 9000,
+        "ClaimedToDate": 0
       },
-      "quoteId": "11645669451299",
-      "offerId": 0,
-      "selected": false,
-      "completed": false
+      "PropertyDamageLiability": {
+        "Name": "Property Damage",
+        "Active": true,
+        "CoveredAmount": 15000,
+        "ClaimedToDate": 0
+      },
+      "Collision": {
+        "Name": "Collision",
+        "Active": false,
+        "CoveredAmount": 0,
+        "ClaimedToDate": 0
+      },
+      "Comprehensive": {
+        "Name": "Comprehensive",
+        "Active": false,
+        "CoveredAmount": 0,
+        "ClaimedToDate": 0
+      },
+      "PersonalInjuryProtection": {
+        "Name": "Personal Injury",
+        "Active": false,
+        "CoveredAmount": 0,
+        "ClaimedToDate": 0
+      },
+      "UnderinsuredMotorist": {
+        "Name": "Underinsured Motorist",
+        "Active": false,
+        "CoveredAmount": 0,
+        "ClaimedToDate": 0
+      }
     },
-    {
-      "duration_years": 1,
-      "offer_details": "This is a mock up offer. There's no details available",
-      "price": 1299,
-      "Coverage": {
-        "BodilyInjuryLiability": {
-          "Name": "Bodily Injury Liability",
-          "Active": true,
-          "CoveredAmount": 18000,
-          "ClaimedToDate": 0
-        },
-        "PropertyDamageLiability": {
-          "Name": "Property Damage",
-          "Active": true,
-          "CoveredAmount": 25000,
-          "ClaimedToDate": 0
-        },
-        "Collision": {
-          "Name": "Collision",
-          "Active": true,
-          "CoveredAmount": 25000,
-          "ClaimedToDate": 0
-        },
-        "Comprehensive": {
-          "Name": "Comprehensive",
-          "Active": true,
-          "CoveredAmount": 50000,
-          "ClaimedToDate": 0
-        },
-        "PersonalInjuryProtection": {
-          "Name": "Personal Injury",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        },
-        "UnderinsuredMotorist": {
-          "Name": "Underinsured Motorist",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        }
+    "offerId": 0,
+    "selected": true
+  },
+  {
+    "id": "21645678339867",
+    "user": "Customer",
+    "name": "",
+    "phone": "",
+    "email": "",
+    "description": "",
+    "duration_years": 1,
+    "offer_details": "This is a mock up offer. There's no details available",
+    "price": 1299,
+    "Coverage": {
+      "BodilyInjuryLiability": {
+        "Name": "Bodily Injury Liability",
+        "Active": true,
+        "CoveredAmount": 18000,
+        "ClaimedToDate": 0
       },
-      "quoteId": "11645669451299",
-      "offerId": 1,
-      "selected": false,
-      "completed": false
+      "PropertyDamageLiability": {
+        "Name": "Property Damage",
+        "Active": true,
+        "CoveredAmount": 25000,
+        "ClaimedToDate": 0
+      },
+      "Collision": {
+        "Name": "Collision",
+        "Active": true,
+        "CoveredAmount": 25000,
+        "ClaimedToDate": 0
+      },
+      "Comprehensive": {
+        "Name": "Comprehensive",
+        "Active": true,
+        "CoveredAmount": 50000,
+        "ClaimedToDate": 0
+      },
+      "PersonalInjuryProtection": {
+        "Name": "Personal Injury",
+        "Active": false,
+        "CoveredAmount": 0,
+        "ClaimedToDate": 0
+      },
+      "UnderinsuredMotorist": {
+        "Name": "Underinsured Motorist",
+        "Active": false,
+        "CoveredAmount": 0,
+        "ClaimedToDate": 0
+      }
     },
-    {
-      "duration_years": 1,
-      "offer_details": "This is a mock up offer. There's no details available",
-      "price": 1999,
-      "Coverage": {
-        "BodilyInjuryLiability": {
-          "Name": "Bodily Injury Liability",
-          "Active": true,
-          "CoveredAmount": 25000,
-          "ClaimedToDate": 0
-        },
-        "PropertyDamageLiability": {
-          "Name": "Property Damage",
-          "Active": true,
-          "CoveredAmount": 40000,
-          "ClaimedToDate": 0
-        },
-        "Collision": {
-          "Name": "Collision",
-          "Active": true,
-          "CoveredAmount": 45000,
-          "ClaimedToDate": 0
-        },
-        "Comprehensive": {
-          "Name": "Comprehensive",
-          "Active": true,
-          "CoveredAmount": 50000,
-          "ClaimedToDate": 0
-        },
-        "PersonalInjuryProtection": {
-          "Name": "Personal Injury",
-          "Active": true,
-          "CoveredAmount": 50000,
-          "ClaimedToDate": 0
-        },
-        "UnderinsuredMotorist": {
-          "Name": "Underinsured Motorist",
-          "Active": true,
-          "CoveredAmount": 50000,
-          "ClaimedToDate": 0
-        }
+    "offerId": 1,
+    "selected": true
+  },
+  {
+    "id": "21645678339867",
+    "user": "Customer",
+    "name": "",
+    "phone": "",
+    "email": "",
+    "description": "",
+    "duration_years": 1,
+    "offer_details": "This is a mock up offer. There's no details available",
+    "price": 1999,
+    "Coverage": {
+      "BodilyInjuryLiability": {
+        "Name": "Bodily Injury Liability",
+        "Active": true,
+        "CoveredAmount": 25000,
+        "ClaimedToDate": 0
       },
-      "quoteId": "11645669451299",
-      "offerId": 2,
-      "selected": false,
-      "completed": false
-    }
-  ],
-  [
-    {
-      "duration_years": 1,
-      "offer_details": "This is a mock up offer. There's no details available",
-      "price": 999,
-      "Coverage": {
-        "BodilyInjuryLiability": {
-          "Name": "Bodily Injury",
-          "Active": true,
-          "CoveredAmount": 9000,
-          "ClaimedToDate": 0
-        },
-        "PropertyDamageLiability": {
-          "Name": "Property Damage",
-          "Active": true,
-          "CoveredAmount": 15000,
-          "ClaimedToDate": 0
-        },
-        "Collision": {
-          "Name": "Collision",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        },
-        "Comprehensive": {
-          "Name": "Comprehensive",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        },
-        "PersonalInjuryProtection": {
-          "Name": "Personal Injury",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        },
-        "UnderinsuredMotorist": {
-          "Name": "Underinsured Motorist",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        }
+      "PropertyDamageLiability": {
+        "Name": "Property Damage",
+        "Active": true,
+        "CoveredAmount": 40000,
+        "ClaimedToDate": 0
       },
-      "quoteId": "11645669651993",
-      "offerId": 0,
-      "selected": false,
-      "completed": false
+      "Collision": {
+        "Name": "Collision",
+        "Active": true,
+        "CoveredAmount": 45000,
+        "ClaimedToDate": 0
+      },
+      "Comprehensive": {
+        "Name": "Comprehensive",
+        "Active": true,
+        "CoveredAmount": 50000,
+        "ClaimedToDate": 0
+      },
+      "PersonalInjuryProtection": {
+        "Name": "Personal Injury",
+        "Active": true,
+        "CoveredAmount": 50000,
+        "ClaimedToDate": 0
+      },
+      "UnderinsuredMotorist": {
+        "Name": "Underinsured Motorist",
+        "Active": true,
+        "CoveredAmount": 50000,
+        "ClaimedToDate": 0
+      }
     },
-    {
-      "duration_years": 1,
-      "offer_details": "This is a mock up offer. There's no details available",
-      "price": 1299,
-      "Coverage": {
-        "BodilyInjuryLiability": {
-          "Name": "Bodily Injury Liability",
-          "Active": true,
-          "CoveredAmount": 18000,
-          "ClaimedToDate": 0
-        },
-        "PropertyDamageLiability": {
-          "Name": "Property Damage",
-          "Active": true,
-          "CoveredAmount": 25000,
-          "ClaimedToDate": 0
-        },
-        "Collision": {
-          "Name": "Collision",
-          "Active": true,
-          "CoveredAmount": 25000,
-          "ClaimedToDate": 0
-        },
-        "Comprehensive": {
-          "Name": "Comprehensive",
-          "Active": true,
-          "CoveredAmount": 50000,
-          "ClaimedToDate": 0
-        },
-        "PersonalInjuryProtection": {
-          "Name": "Personal Injury",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        },
-        "UnderinsuredMotorist": {
-          "Name": "Underinsured Motorist",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        }
-      },
-      "quoteId": "11645669651993",
-      "offerId": 1,
-      "selected": false,
-      "completed": false
-    },
-    {
-      "duration_years": 1,
-      "offer_details": "This is a mock up offer. There's no details available",
-      "price": 1999,
-      "Coverage": {
-        "BodilyInjuryLiability": {
-          "Name": "Bodily Injury Liability",
-          "Active": true,
-          "CoveredAmount": 25000,
-          "ClaimedToDate": 0
-        },
-        "PropertyDamageLiability": {
-          "Name": "Property Damage",
-          "Active": true,
-          "CoveredAmount": 40000,
-          "ClaimedToDate": 0
-        },
-        "Collision": {
-          "Name": "Collision",
-          "Active": true,
-          "CoveredAmount": 45000,
-          "ClaimedToDate": 0
-        },
-        "Comprehensive": {
-          "Name": "Comprehensive",
-          "Active": true,
-          "CoveredAmount": 50000,
-          "ClaimedToDate": 0
-        },
-        "PersonalInjuryProtection": {
-          "Name": "Personal Injury",
-          "Active": true,
-          "CoveredAmount": 50000,
-          "ClaimedToDate": 0
-        },
-        "UnderinsuredMotorist": {
-          "Name": "Underinsured Motorist",
-          "Active": true,
-          "CoveredAmount": 50000,
-          "ClaimedToDate": 0
-        }
-      },
-      "quoteId": "11645669651993",
-      "offerId": 2,
-      "selected": false,
-      "completed": false
-    }
-  ],
-  [
-    {
-      "duration_years": 1,
-      "offer_details": "This is a mock up offer. There's no details available",
-      "price": 999,
-      "Coverage": {
-        "BodilyInjuryLiability": {
-          "Name": "Bodily Injury",
-          "Active": true,
-          "CoveredAmount": 9000,
-          "ClaimedToDate": 0
-        },
-        "PropertyDamageLiability": {
-          "Name": "Property Damage",
-          "Active": true,
-          "CoveredAmount": 15000,
-          "ClaimedToDate": 0
-        },
-        "Collision": {
-          "Name": "Collision",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        },
-        "Comprehensive": {
-          "Name": "Comprehensive",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        },
-        "PersonalInjuryProtection": {
-          "Name": "Personal Injury",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        },
-        "UnderinsuredMotorist": {
-          "Name": "Underinsured Motorist",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        }
-      },
-      "quoteId": "11645669702871",
-      "offerId": 0,
-      "selected": false,
-      "completed": false
-    },
-    {
-      "duration_years": 1,
-      "offer_details": "This is a mock up offer. There's no details available",
-      "price": 1299,
-      "Coverage": {
-        "BodilyInjuryLiability": {
-          "Name": "Bodily Injury Liability",
-          "Active": true,
-          "CoveredAmount": 18000,
-          "ClaimedToDate": 0
-        },
-        "PropertyDamageLiability": {
-          "Name": "Property Damage",
-          "Active": true,
-          "CoveredAmount": 25000,
-          "ClaimedToDate": 0
-        },
-        "Collision": {
-          "Name": "Collision",
-          "Active": true,
-          "CoveredAmount": 25000,
-          "ClaimedToDate": 0
-        },
-        "Comprehensive": {
-          "Name": "Comprehensive",
-          "Active": true,
-          "CoveredAmount": 50000,
-          "ClaimedToDate": 0
-        },
-        "PersonalInjuryProtection": {
-          "Name": "Personal Injury",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        },
-        "UnderinsuredMotorist": {
-          "Name": "Underinsured Motorist",
-          "Active": false,
-          "CoveredAmount": 0,
-          "ClaimedToDate": 0
-        }
-      },
-      "quoteId": "11645669702871",
-      "offerId": 1,
-      "selected": false,
-      "completed": false
-    },
-    {
-      "duration_years": 1,
-      "offer_details": "This is a mock up offer. There's no details available",
-      "price": 1999,
-      "Coverage": {
-        "BodilyInjuryLiability": {
-          "Name": "Bodily Injury Liability",
-          "Active": true,
-          "CoveredAmount": 25000,
-          "ClaimedToDate": 0
-        },
-        "PropertyDamageLiability": {
-          "Name": "Property Damage",
-          "Active": true,
-          "CoveredAmount": 40000,
-          "ClaimedToDate": 0
-        },
-        "Collision": {
-          "Name": "Collision",
-          "Active": true,
-          "CoveredAmount": 45000,
-          "ClaimedToDate": 0
-        },
-        "Comprehensive": {
-          "Name": "Comprehensive",
-          "Active": true,
-          "CoveredAmount": 50000,
-          "ClaimedToDate": 0
-        },
-        "PersonalInjuryProtection": {
-          "Name": "Personal Injury",
-          "Active": true,
-          "CoveredAmount": 50000,
-          "ClaimedToDate": 0
-        },
-        "UnderinsuredMotorist": {
-          "Name": "Underinsured Motorist",
-          "Active": true,
-          "CoveredAmount": 50000,
-          "ClaimedToDate": 0
-        }
-      },
-      "quoteId": "11645669702871",
-      "offerId": 2,
-      "selected": false,
-      "completed": false
-    }
-  ]
+    "offerId": 2,
+    "selected": false
+  }
 ]

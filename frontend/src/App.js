@@ -12,6 +12,7 @@ import {
   Routes,
   Route
 } from "react-router-dom";
+import {urlContext} from './components/urlContext';
 
 function App() {
   const [user, setUser] = useState("");
@@ -28,26 +29,27 @@ function App() {
   const handleUser = (e) => {
       setUser(e.target.value); 
   }
-
   
   return (
-    <div className="bg-light">
-      <Form.Select onChange = { handleUser } value={ user } size="sm" >
-        <option disabled>Select User Type</option>
-        <option value="Customer">Customer</option>
-        <option value="InsuranceWorker">Insurance Worker</option>
-        <option value="InsuranceManager">Insurance Manager</option>
-        <option value="Authority">Authority</option>
-      </Form.Select>
-      <Navbar />
-      <BrowserRouter>
-        <Routes>
-          <Route path="quotes" element={<Quotes user={user}/>} />
-          <Route path="policies" element={<Policies user={user}/>} />
-          <Route path="claims" element={<Claims user={user}/>} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <urlContext.Provider value={'http://34.121.198.33:5986'}>
+      <div className="bg-light">
+        <Form.Select onChange = { handleUser } value={ user } size="sm" >
+          <option disabled>Select User Type</option>
+          <option value="Customer">Customer</option>
+          <option value="InsuranceWorker">Insurance Worker</option>
+          <option value="InsuranceManager">Insurance Manager</option>
+          <option value="Authority">Authority</option>
+        </Form.Select>
+        <Navbar />
+        <BrowserRouter>
+          <Routes>
+            <Route path="quotes" element={<Quotes user={user}/>} />
+            <Route path="policies" element={<Policies user={user}/>} />
+            <Route path="claims" element={<Claims user={user}/>} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </urlContext.Provider>
   );
 }
 
