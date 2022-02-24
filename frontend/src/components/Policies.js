@@ -33,8 +33,13 @@ const Policy = (props) => {
                               </Card.Title>
                               <Card.Text id={1} >
                                 <ListGroup>
-                                  <ListGroup.Item>✅ Bodily Injury: $99.999</ListGroup.Item>
-                                </ListGroup>
+                                    <ListGroup.Item>✅ Bodily Injury: $99.999</ListGroup.Item>
+                                    <ListGroup.Item>✅ Property Damage: $99.999</ListGroup.Item>
+                                    <ListGroup.Item>✅ Collision: $99.999</ListGroup.Item>
+                                    <ListGroup.Item>✅ Comprehensive: $99.999</ListGroup.Item> 
+                                    <ListGroup.Item>❌ Personal Injury</ListGroup.Item>
+                                    <ListGroup.Item>❌ Underinsured Motorist</ListGroup.Item>
+                                  </ListGroup>
                               </Card.Text>
                               <Card.Text id={1} style={{fontWeight: 'bold'}}>
                                   Click to see policy details
