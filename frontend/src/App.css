@@ -2,15 +2,24 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
 }
 
 .App-Stats {
   min-height: 100vh;
   padding-top: 10vh;
   font-size: calc(10px + 2vmin);
+
 }
 
 .App-Contribution {
   min-height: 100vh;
   padding-top: 5vh;
+}
+
+.containerReact {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
