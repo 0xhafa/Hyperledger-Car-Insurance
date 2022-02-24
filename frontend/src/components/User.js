@@ -5,11 +5,11 @@ export default function User() {
     const [user, setUser] = useState("Customer")
 
     useEffect(() => {
-        setUser(JSON.parse(window.localStorage.getItem('user')));
+        //setUser(JSON.parse(window.localStorage.getItem('user')));
     },[])
 
     useEffect(() => {
-        window.localStorage.setItem('user', JSON.stringify(user));
+        //window.localStorage.setItem('user', JSON.stringify(user));
     }, [user])
 
     const handleUser = (e) => {
