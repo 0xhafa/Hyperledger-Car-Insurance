@@ -3,6 +3,9 @@ const router = express.Router();
 //const jsonManager = require('../utils/jsonManager');
 //const InsuranceNetwork = require('./InsuranceNetwork');
 const fs = require('fs')
+const Isurance = require('../insuranceLib');
+
+const identities = JSON.parse(fs.readFileSync(process.env.INITIAL_IDENTITIES));
 
 router.post('/quote', function(req, res) {
   let baseOffers = JSON.parse(fs.readFileSync("./json/base_offers.json"));
@@ -19,8 +22,12 @@ router.post('/quote', function(req, res) {
 router.post('/selectOffer', function(req, res) {
   let offers = JSON.parse(fs.readFileSync("./json/offers.json"));
   let index = offers.findIndex(offer => offer.offerId == req.body.offerId);
-  offers[index].selected = true;
-  fs.writeFileSync("./json/offers.json", JSON.stringify(offers, null, 2))
+  //offers[index].selected = true;
+
+  const customer = await new Insurance(identities[0]).init();
+  const policyNo1 = await customer.submitPolicy(policy);
+
+  //fs.writeFileSync("./json/offers.json", JSON.stringify(offers, null, 2))
   res.json({});
 })
 
