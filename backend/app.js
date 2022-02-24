@@ -5,6 +5,7 @@ const cors = require('cors');
 const routingEngine = require('./routes/routingEngine');
 
 const app = express();
+
 app.use(cors());
 app.use('/', bodyParser.json(), routingEngine);
 
@@ -12,5 +13,7 @@ app.use('/', bodyParser.json(), routingEngine);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+//app.listen(3001);
 
 module.exports = app;

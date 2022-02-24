@@ -1,50 +1,119 @@
 const express = require('express');
-
 const router = express.Router();
+//const jsonManager = require('../utils/jsonManager');
+//const InsuranceNetwork = require('./InsuranceNetwork');
+const fs = require('fs')
 
-router.post('/askquote', function(req, res) {
-  storage.saveContractAddress(req.body.address);
-  res.json({success: true});
+router.post('/quote', function(req, res) {
+  let baseOffers = JSON.parse(fs.readFileSync("./json/base_offers.json"));
+  let id = 0;
+  let offers = baseOffers.map(offer => {
+    offer.offerId = id++;
+    offer.selected = false;
+    return {...req.body, ...offer}
+  });
+  fs.writeFileSync("./json/offers.json", JSON.stringify(offers, null, 2));
+  res.json(offers);
 });
 
-router.get('/submitpolicy', function(req, res) {
-  storage.saveContractAddress(req.body.address);
-  res.json({success: true});
-});
+router.post('/selectOffer', function(req, res) {
+  let offers = JSON.parse(fs.readFileSync("./json/offers.json"));
+  let index = offers.findIndex(offer => offer.offerId == req.body.offerId);
+  offers[index].selected = true;
+  fs.writeFileSync("./json/offers.json", JSON.stringify(offers, null, 2))
+  res.json({});
+})
 
-router.get('/activatepolicy', function(req, res) {
-  res.json({success: true, id: storage.saveMetadata(req.body)});
-});
+// router.get('/submitpolicy', function(req, res) {
+//   let data = req.body.data;
+//   let insuranceNetwork = new InsuranceNetwork(req.body.user);
 
-router.get('/expirepolicy', function(req, res) {
-  const result = storage.getContractAddress();
-  if(!result) {
-    res.json({success: false});
-  } else {
-    res.json({success: true, address: result});
-  }
-});
+//   insuranceNetwork.submitPolicy(data)
+//   .then((data) => {
+//     res.status(200).json(data)
+//   })
+//   .catch((err) => {
+//     res.status(500).json({error: err.toString()})
+//   })
+// });
 
-router.get('/suspendpolicy', function(req, res) {
-  storage.saveContractAddress(req.body.address);
-  res.json({success: true});
-});
+// router.get('/activatepolicy', function(req, res) {
+//   let data = req.body.data;
+//   let insuranceNetwork = new InsuranceNetwork(req.body.user);
 
+//   insuranceNetwork.activatePolicy(data)
+//   .then((data) => {
+//     res.status(200).json(data)
+//   })
+//   .catch((err) => {
+//     res.status(500).json({error: err.toString()})
+//   }) 
+// });
 
-router.post('/addclaim', function(req, res) {
-  storage.saveContractAddress(req.body.address);
-  res.json({success: true});
-});
+// router.get('/expirepolicy', function(req, res) {
+//   let data = req.body.data;
+//   let insuranceNetwork = new InsuranceNetwork(req.body.user);
 
-router.get('/reviewclaim', function(req, res) {
-  storage.saveContractAddress(req.body.address);
-  res.json({success: true});
-});
+//   insuranceNetwork.expirePolicy(data)
+//   .then((data) => {
+//     res.status(200).json(data)
+//   })
+//   .catch((err) => {
+//     res.status(500).json({error: err.toString()})
+//   })
+// });
 
-router.get('/payoutclaim', function(req, res) {
-  storage.saveContractAddress(req.body.address);
-  res.json({success: true});
-});
+// router.get('/suspendpolicy', function(req, res) {
+//   let data = req.body.data;
+//   let insuranceNetwork = new InsuranceNetwork(req.body.user);
+
+//   insuranceNetwork.suspendPolicy(data)
+//   .then((data) => {
+//     res.status(200).json(data)
+//   })
+//   .catch((err) => {
+//     res.status(500).json({error: err.toString()})
+//   }) 
+// });
+
+// router.post('/addclaim', function(req, res) {
+//   let data = req.body.data;
+//   let insuranceNetwork = new InsuranceNetwork(req.body.user);
+
+//   insuranceNetwork.addClaim(data)
+//   .then((data) => {
+//     res.status(200).json(data)
+//   })
+//   .catch((err) => {
+//     res.status(500).json({error: err.toString()})
+//   })
+// });
+
+// router.get('/reviewclaim', function(req, res) {
+//   let data = req.body.data;
+//   let insuranceNetwork = new InsuranceNetwork(req.body.user);
+
+//   insuranceNetwork.reviewClaim(data)
+//   .then((data) => {
+//     res.status(200).json(data)
+//   })
+//   .catch((err) => {
+//     res.status(500).json({error: err.toString()})
+//   })
+// });
+
+// router.get('/payoutclaim', function(req, res) {
+//   let data = req.body.data;
+//   let insuranceNetwork = new InsuranceNetwork(req.body.user);
+
+//   insuranceNetwork.payoutClaim(data)
+//   .then((data) => {
+//     res.status(200).json(data)
+//   })
+//   .catch((err) => {
+//     res.status(500).json({error: err.toString()})
+//   })
+// });
 
 
 module.exports = router;
