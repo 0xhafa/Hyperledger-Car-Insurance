@@ -26,7 +26,7 @@ function yaml_ccp {
         organizations/ccp-template.yaml | sed -e $'s/\\\\n/\\\n          /g'
 }
 
-ORG=1
+ORG=InsuranceCompany1
 P0PORT=7051
 CAPORT=7054
 PEERPEM=organizations/peerOrganizations/InsuranceCompany1.example.com/tlsca/tlsca.InsuranceCompany1.example.com-cert.pem
@@ -35,7 +35,7 @@ CAPEM=organizations/peerOrganizations/InsuranceCompany1.example.com/ca/ca.Insura
 echo "$(json_ccp $ORG $P0PORT $CAPORT $PEERPEM $CAPEM)" > organizations/peerOrganizations/InsuranceCompany1.example.com/connection-InsuranceCompany1.json
 echo "$(yaml_ccp $ORG $P0PORT $CAPORT $PEERPEM $CAPEM)" > organizations/peerOrganizations/InsuranceCompany1.example.com/connection-InsuranceCompany1.yaml
 
-ORG=2
+ORG=InsuranceCompany1
 P0PORT=9051
 CAPORT=8054
 PEERPEM=organizations/peerOrganizations/InsuranceCompany2.example.com/tlsca/tlsca.InsuranceCompany2.example.com-cert.pem

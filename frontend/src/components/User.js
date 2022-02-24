@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form'
 
 export default function User() {
     const [user, setUser] = useState("Customer")
-
+/*
     useEffect(() => {
         //setUser(JSON.parse(window.localStorage.getItem('user')));
     },[])
@@ -11,7 +11,7 @@ export default function User() {
     useEffect(() => {
         //window.localStorage.setItem('user', JSON.stringify(user));
     }, [user])
-
+*/
     const handleUser = (e) => {
         setUser(e.target.value); 
     }

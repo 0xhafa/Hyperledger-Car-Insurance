@@ -239,8 +239,10 @@ ldap:
 affiliations:
    InsuranceCompany1:
       - corporate
+      - none
    InsuranceCompany2:
       - corporate
+      - none
 
 #############################################################################
 #  Signing section

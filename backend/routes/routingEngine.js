@@ -1,34 +1,33 @@
 const express = require('express');
 const router = express.Router();
-const jsonManager = require('../utils/jsonManager');
+//const jsonManager = require('../utils/jsonManager');
 //const InsuranceNetwork = require('./InsuranceNetwork');
 const fs = require('fs')
-const offers = require('../json/offers.json')
+const Isurance = require('../insuranceLib');
+
+const identities = JSON.parse(fs.readFileSync(process.env.INITIAL_IDENTITIES));
 
 router.post('/quote', function(req, res) {
-  let quote = jsonManager.addToJson("./json/quotes.json", req.body);
-  let baseOffers = JSON.parse(jsonManager.getJson("./json/base_offers.json"));
+  let baseOffers = JSON.parse(fs.readFileSync("./json/base_offers.json"));
   let id = 0;
   let offers = baseOffers.map(offer => {
-    offer.quoteId = quote.id;
     offer.offerId = id++;
     offer.selected = false;
-    offer.completed = false;
-    return offer
+    return {...req.body, ...offer}
   });
-  jsonManager.addToJson("./json/offers.json", offers)
+  fs.writeFileSync("./json/offers.json", JSON.stringify(offers, null, 2));
   res.json(offers);
 });
 
-router.get('/offers', function(req, res) {
-  res.json(offers)
-})
-
 router.post('/selectOffer', function(req, res) {
-  let quotes = JSON.parse(fs.readFileSync("./json/offers.json"))
-  let index = quotes.findIndex(quote => quote.every(offer => (offer.quoteId == req.body.quoteId)))
-  quotes[index] = quotes[index].map(offer => ({...offer, completed: true}))
-  fs.writeFileSync("./json/offers.json", JSON.stringify(quotes, null, 2))
+  let offers = JSON.parse(fs.readFileSync("./json/offers.json"));
+  let index = offers.findIndex(offer => offer.offerId == req.body.offerId);
+  //offers[index].selected = true;
+
+  const customer = await new Insurance(identities[0]).init();
+  const policyNo1 = await customer.submitPolicy(policy);
+
+  //fs.writeFileSync("./json/offers.json", JSON.stringify(offers, null, 2))
   res.json({});
 })
 

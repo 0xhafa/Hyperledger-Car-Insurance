@@ -60,10 +60,10 @@ Organizations:
         Policies:
             Readers:
                 Type: Signature
-                Rule: "OR('InsuranceCompany1.admin', 'InsuranceCompany1.peer', 'InsuranceCompany1.client')"
+                Rule: "OR('InsuranceCompany1.member', 'InsuranceCompany1.peer', 'InsuranceCompany1.client')"
             Writers:
                 Type: Signature
-                Rule: "OR('InsuranceCompany1.admin', 'InsuranceCompany1.client')"
+                Rule: "OR('InsuranceCompany1.member', 'InsuranceCompany1.client')"
             Admins:
                 Type: Signature
                 Rule: "OR('InsuranceCompany1.admin')"

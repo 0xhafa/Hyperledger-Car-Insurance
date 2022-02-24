@@ -6,10 +6,11 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import Axios from 'axios';
 import newId from '../utils/newId';
+import { urlContext } from './urlContext';
 
 // maintains the registration form for new initatives
 export default function QuoteForm(props) {
-    const url = "http://localhost:3001/quote"
+    const url = React.useContext(urlContext);
     const [data, setData] = useState({
         name: "",
         phone: "",
@@ -25,14 +26,15 @@ export default function QuoteForm(props) {
     const submitQuote = event => {
         event.preventDefault();
         console.log(data);
-        Axios.post(url, {
+        Axios.post(`${url}/quote`, {
             id: newId(),
+            user: props.user,
             name: data.name,
             phone: data.phone,
             email: data.email,
             description: data.description
         }).then((res) => {
-            console.log(res)
+            props.setOffers(res.data);
         })
     }
 
