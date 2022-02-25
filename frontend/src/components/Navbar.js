@@ -13,8 +13,8 @@ export default function Navbar(props) {
             <NavbarReact.Collapse id="basic-navbar-nav">
                 <Nav className="m-auto">
                     <Nav.Link href="quotes">Quote</Nav.Link>
-                    <Nav.Link href="policies">Policy</Nav.Link>
-                    <Nav.Link href="claims">Claim</Nav.Link>
+                    <Nav.Link href="policies">Policies</Nav.Link>
+                    <Nav.Link href="claims">Claims</Nav.Link>
                 </Nav>
             </NavbarReact.Collapse>
         </Container>
