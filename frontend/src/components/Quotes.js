@@ -7,6 +7,7 @@ import { urlContext } from './urlContext';
 const Quotes = (props) => {
   const url = React.useContext(urlContext);
   const [offers, setOffers] = useState([]);
+  const [policyNo, setPolicyNo] = useState({});
 
   function selectOffer(event) {
     const offerId = event.target.id
@@ -14,13 +15,16 @@ const Quotes = (props) => {
     let offers_ = [...offers];
     offers_[index].selected = true;
     setOffers(offers_);
-    //Axios.post(`${url}/selectOffer`, {offerId: offerId})
+    Axios.post(`${url}/submitPolicy`, {offerId: offerId})
+    .then((res)=>{
+      setPolicyNo(res.data.policyNo)
+    })
   }
 
   return (
     <div>
       <QuoteForm user = {props.user} setOffers={setOffers}/>
-      { props.user == "Customer 1" || props.user == "Customer 2"  ? <Offers offers={offers} selectOffer={selectOffer}/> : ""}
+      { props.user == "customer1" || props.user == "customer2"  ? <Offers policyNo={policyNo} offers={offers} selectOffer={selectOffer}/> : ""}
     </div>
   );
 };

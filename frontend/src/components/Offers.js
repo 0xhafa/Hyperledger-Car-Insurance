@@ -6,10 +6,22 @@ import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import { urlContext } from './urlContext';
 import Axios from 'axios';
 
 // maintains the main grid of the Offers based on current user
 export default function Offers(props) {
+  const url = React.useContext(urlContext);
+
+  function pay(){
+    console.log(props.policyNo)
+    Axios.get(`${url}/makePayment?policyNo=${props.policyNo}`)
+    .then((res)=>{
+      console.log(res.data)
+      //if SUCESS hide pay
+      //Map offer 
+    });
+  }
 
   return (
     <div className='containerReact'>
@@ -52,11 +64,12 @@ export default function Offers(props) {
                 <Card.Footer className="mt-auto" style={{ display: "flex" }}>
                   <h3>{`Price: $ ${offer.price}`}</h3>
                   {offer.selected ?
-                  <Button disabled
+                  <Button
                     variant="outline-dark" 
                     id={offer.offerId}
-                    style={{ marginLeft: "auto" }}>
-                    Accepted
+                    style={{ marginLeft: "auto" }}
+                    onClick={(e) => {pay()}}>
+                    Pay
                   </Button> :
                   <Button
                     id={offer.offerId}

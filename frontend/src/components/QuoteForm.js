@@ -12,10 +12,13 @@ import { urlContext } from './urlContext';
 export default function QuoteForm(props) {
     const url = React.useContext(urlContext);
     const [data, setData] = useState({
-        name: "",
-        phone: "",
-        email: "",
-        description: ""
+        userId: "",
+        firstName: "",
+        lastName: "",
+        driversLicenseNo: "",
+        carModel: "",
+        carLicensePlate: "",
+        carYear: ""
     })
 
     const setField = (field, value) => {
@@ -23,18 +26,13 @@ export default function QuoteForm(props) {
         return;
     }
 
+
+
     const submitQuote = event => {
         event.preventDefault();
-        console.log(data);
-        Axios.post(`${url}/quote`, {
-            id: newId(),
-            user: props.user,
-            firstname: data.firstname,
-            lastname: data.lastname,
-            license: data.license,
-            carmodel: data.carmodel,
-            carplate: data.carplate,
-            caryear: data.caryear
+        Axios.post(`${url}/getOffers`, {
+            ...data,
+            userId: props.user
         }).then((res) => {
             props.setOffers(res.data);
         })
@@ -54,12 +52,12 @@ export default function QuoteForm(props) {
                         <Form.Control 
                             type="text" 
                             placeholder="First name" 
-                            onChange={e => setField('firstname', e.target.value)}
+                            onChange={e => setField('firstName', e.target.value)}
                         />
                         <Form.Control 
                             type="text" 
                             placeholder="Last name" 
-                            onChange={e => setField('lastname', e.target.value)}
+                            onChange={e => setField('lastName', e.target.value)}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="quoteForm.License">
@@ -67,7 +65,7 @@ export default function QuoteForm(props) {
                         <Form.Control 
                             type="int" 
                             placeholder="License number" 
-                            onChange={e => setField('license', e.target.value)}
+                            onChange={e => setField('driversLicenseNo', e.target.value)}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="quoteForm.Carmodel">
@@ -75,7 +73,7 @@ export default function QuoteForm(props) {
                         <Form.Control  
                             type="int"
                             placeholder="Car model" 
-                            onChange={e => setField('carmodel', e.target.value)}
+                            onChange={e => setField('carModel', e.target.value)}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="quoteForm.Carplate">
@@ -83,7 +81,7 @@ export default function QuoteForm(props) {
                         <Form.Control 
                             type="text" 
                             placeholder="Car plate" 
-                            onChange={e => setField('carplate', e.target.value)}
+                            onChange={e => setField('carLicensePlate', e.target.value)}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="quoteForm.Caryear">
@@ -91,11 +89,11 @@ export default function QuoteForm(props) {
                         <Form.Control  
                             type="int" 
                             placeholder="Car year" 
-                            onChange={e => setField('caryear', e.target.value)}
+                            onChange={e => setField('carYear', e.target.value)}
                         />
                     </Form.Group>
-                    <div class="horizontal-center">
-                    { props.user == "Customer 1" || props.user == "Customer 2" ?
+                    <div className="horizontal-center">
+                    { props.user == "customer1" || props.user == "customer2" ?
                     <Button type="submit">Submit</Button> : "" }
                     </div>
                 </Form>

@@ -15,8 +15,7 @@ import {
 import {urlContext} from './components/urlContext';
 
 function App() {
-  const [user, setUser] = useState("Customer 1");
-  // const [quote, setQuote] = useState([]);
+  const [user, setUser] = useState("customer1");
 
   const handleUser = (e) => {
       setUser(e.target.value); 
@@ -26,12 +25,14 @@ function App() {
     <urlContext.Provider value={'http://34.136.154.88:5986'}>
       <div className="bg-light">
         <Form.Select onChange = { handleUser } value={ user } size="sm" >
-          <option disabled>Select User Type</option>
-          <option value="Customer 1">Customer 1</option>
-          <option value="Customer 2">Customer 2</option>
-          <option value="InsuranceWorker">Insurance Worker</option>
-          <option value="InsuranceManager">Insurance Manager</option>
-          <option value="Authority">Authority</option>
+        <option disabled>Select User Type</option>
+            <option value="customer1">Customer 1</option>
+            <option value="customer2">Customer 2</option>
+            <option value="worker">Insurance Worker</option>
+            <option value="manager">Insurance Manager</option>
+            <option value="adjuster">Insurance Adjuster</option>
+            <option value="bookkeeper">Bookkeeper</option>
+            <option value="reader">Authority</option>
         </Form.Select>
         <Navbar />
         <BrowserRouter>

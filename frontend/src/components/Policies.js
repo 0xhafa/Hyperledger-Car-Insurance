@@ -19,7 +19,7 @@ const Policy = (props) => {
   const [claimDescription, setClaimDescription] = useState("");
 
   const testPolicies = [{
-    Status: 'PENDING',
+    State: 'PENDING',
     StartDate: '0',
     EndDate: '0',
     MainDriver: {
@@ -44,7 +44,7 @@ const Policy = (props) => {
     }
   },
   {
-    Status: 'ACTIVE',
+    State: 'ACTIVE',
     StartDate: '0',
     EndDate: '0',
     MainDriver: {
@@ -70,13 +70,14 @@ const Policy = (props) => {
   }]
 
   useEffect(() => {
+
     setPolicies(testPolicies);
     console.log(props.user)
-    //Axios.get(`${url}/getPolicies`, props.user)
+    //Axios.get(`${url}/allPoliciesUser`, props.user)
   },[])
 
-  function selectStatus(status){
-    switch(status){
+  function selectStatus(State){
+    switch(State){
       case "PENDING":
         return "Pending ⚪";
       case "ACTIVE":
@@ -104,31 +105,31 @@ const Policy = (props) => {
   function addClaim() {
     setClaimForm(false);
     setClaimDescription("");
-    //Axios.get(`${url}/activatePolicy`, [claimPolicy, claimDescription])
+    //Axios.get(`${url}/activatePolicy`, [userId, policyId, claimDescription])
     // .then(setPolicies(res.data))
   }
 
   function activatePolicy(i) {
     let policies_ = [...policies];
-    policies_[i].Status = "ACTIVE";
+    policies_[i].State = "ACTIVE";
     setPolicies(policies_);
-    //Axios.get(`${url}/activatePolicy`, i)
+    //Axios.get(`${url}/activatePolicy`, policyId)
     // .then(setPolicies(res.data))
   }
 
   function suspendPolicy(i) {
     let policies_ = [...policies];
-    policies_[i].Status = "SUSPENDED";
+    policies_[i].State = "SUSPENDED";
     setPolicies(policies_);
-    //Axios.get(`${url}/suspendPolicy`, i)
+    //Axios.get(`${url}/suspendPolicy`, policyId)
     // .then(setPolicies(res.data))
   }
   
   function expirePolicy(i) {
     let policies_ = [...policies];
-    policies_[i].Status = "EXPIRED";
+    policies_[i].State = "EXPIRED";
     setPolicies(policies_);
-    //Axios.get(`${url}/expirePolicy`, i)
+    //Axios.get(`${url}/expirePolicy`, policyId)
     // .then(setPolicies(res.data))
   }
 
@@ -168,7 +169,7 @@ const Policy = (props) => {
               <Col key={i}>
               <Card bg="light" className="h-100">
               <Card.Header>
-                {`Status: ${selectStatus(policy.Status)}`}
+                {`State: ${selectStatus(policy.State)}`}
               </Card.Header>
                 <OverlayTrigger trigger="click" placement="top" overlay={
                   <Popover id="popover-basic">
@@ -195,8 +196,8 @@ const Policy = (props) => {
                   </OverlayTrigger>
                   <Card.Footer className="mt-auto" style={{ display: "flex" }}>
                   <div className="col text-center">
-                      {(props.user === "Customer 1" || props.user === "Customer 2")
-                        && policy.Status === "ACTIVE" ?
+                      {(props.user === "customer1" || props.user === "customer2")
+                        && policy.State === "ACTIVE" ?
                         
                       <Button variant="primary"
                         className="w-25"
@@ -206,8 +207,8 @@ const Policy = (props) => {
                         Add Claim
                       </Button>
                        : 
-                      (props.user === "InsuranceManager" || props.user === "InsuranceWorker") 
-                      && policy.Status === "PENDING" ? 
+                      (props.user === "manager" || props.user === "worker") 
+                      && policy.State === "PENDING" ? 
                       <Button variant="primary"
                         className="w-25"
                         size="sm"
@@ -216,8 +217,8 @@ const Policy = (props) => {
                         onClick={(e) => {activatePolicy(i)}}>
                         Activate
                       </Button> :
-                      (props.user === "InsuranceManager") 
-                      && policy.Status === "ACTIVE" ? 
+                      (props.user === "manager") 
+                      && policy.State === "ACTIVE" ? 
                       <>
                       <Button variant="warning"
                         className="w-25"
@@ -236,8 +237,8 @@ const Policy = (props) => {
                         Expire
                       </Button>
                       </> : 
-                      props.user === "InsuranceWorker" 
-                      && policy.Status === "ACTIVE" ? 
+                      props.user === "worker" 
+                      && policy.State === "ACTIVE" ? 
                       <Button variant="danger"
                         className="w-25"
                         size="sm"

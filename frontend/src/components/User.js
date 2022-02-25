@@ -11,11 +11,13 @@ export default function User() {
     return (
         <Form.Select onChange = { handleUser } value={ user } size="sm" >
             <option disabled>Select User Type</option>
-            <option value="Customer 1">Customer 1</option>
-            <option value="Customer 2">Customer 2</option>
-            <option value="InsuranceWorker">Insurance Worker</option>
-            <option value="InsuranceManager">Insurance Manager</option>
-            <option value="Authority">Authority</option>
+            <option value="customer1">Customer 1</option>
+            <option value="customer2">Customer 2</option>
+            <option value="worker">Insurance Worker</option>
+            <option value="manager">Insurance Manager</option>
+            <option value="adjuster">Insurance Adjuster</option>
+            <option value="bookkeeper">Bookkeeper</option>
+            <option value="reader">Authority</option>
         </Form.Select>
     )
 }
