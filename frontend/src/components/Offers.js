@@ -50,8 +50,12 @@ export default function Offers(props) {
                 <Card.Body id={i}>
                   <Card.Text id={i}>
                     <ListGroup>
-                      {Object.values(offer.Coverage).map((cover) => (
-                        <ListGroup.Item className="d-flex">{`${cover.Active? '✅': '❌'} ${cover.Name} ${cover.CoveredAmount == 0 ? "" : `$ ${cover.CoveredAmount}`}`}</ListGroup.Item>
+                      {Object.keys(offer.Coverage).map((type) => (
+                        <ListGroup.Item className="d-flex">
+                          {`${offer.Coverage[type].Active? '✅': '❌'} 
+                          ${type.replace(/([a-z])([A-Z])/g, "$1 $2")}
+                          ${offer.Coverage[type].CoveredAmount == 0 ? "" : `$${offer.Coverage[type].CoveredAmount}`}`}
+                        </ListGroup.Item>
                       ))}
                     </ListGroup>
                   </Card.Text>
