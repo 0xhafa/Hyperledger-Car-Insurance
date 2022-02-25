@@ -34,7 +34,7 @@ router.post('/getOffers', function(req, res) {
 
   if(!(userData.userId && userData.firstName && userData.lastName &&
        userData.driversLicenseNo && userData.carModel && userData.carYear &&
-       userData.carLicensePlace)) {
+       userData.carLicensePlate)) {
       res.sendStatus(500);
       return;
     }
@@ -51,7 +51,7 @@ router.post('/getOffers', function(req, res) {
     policy.MainDriver.DriversLicenseNo = userData.driversLicenseNo;
     policy.Car.Model = userData.carModel;
     policy.Car.Year = userData.carYear;
-    policy.Car.LicensePlate = userData.carLicensePlace;
+    policy.Car.LicensePlate = userData.carLicensePlate;
     policy.Coverage.BodilyInjuryLiability.Active = true;
     policy.Coverage.BodilyInjuryLiability.CoveredAmount = 50000;
     policy.Coverage.PropertyDamageLiability.Active = true;

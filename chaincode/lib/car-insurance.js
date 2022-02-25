@@ -119,6 +119,7 @@ class CarInsurance extends Contract {
         policy.Claims.push({
             Timestamp: ctx.stub.getTxTimestamp(),
             Description: claimDescription,
+            PolicyNo: policyNo,
             ClaimNo: claimNo,
             State: CLAIM_STATE.PENDING
         });
