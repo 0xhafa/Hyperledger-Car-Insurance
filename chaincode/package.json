@@ -17,6 +17,7 @@
     "author": "Hyperledger",
     "license": "Apache-2.0",
     "dependencies": {
+        "axios": "^0.26.0",
         "crypto": "^1.0.1",
         "fabric-contract-api": "^1.4.6",
         "fabric-shim": "^1.4.6"

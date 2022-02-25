@@ -2,6 +2,7 @@
 
 # install backend dependencies
 cd ./backend
+BACKEND_URL=$(cat .env | grep '(?<=BACKEND_URL=).*$' -Po)
 npm install
 cd ..
 
@@ -13,6 +14,7 @@ cd ./network
 
 # install chaincode dependencies
 cd ../chaincode
+echo "{\"url\":\"$BACKEND_URL\"}" > ./lib/backend.json
 npm install
 cd ../network
 
@@ -64,7 +66,9 @@ peer lifecycle chaincode querycommitted --channelID insurancechannel --name insu
 cd ../backend
 rm -r ./wallet
 node registerAndEnroll.js
-cd ..
+
+echo "Starting backend server..."
+npm start
 
 #export PATH=${PWD}/../bin:${PWD}:$PATH
 #export FABRIC_CFG_PATH=$PWD/../config/
