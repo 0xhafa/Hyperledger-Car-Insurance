@@ -29,16 +29,19 @@ export default function QuoteForm(props) {
         Axios.post(`${url}/quote`, {
             id: newId(),
             user: props.user,
-            name: data.name,
-            phone: data.phone,
-            email: data.email,
-            description: data.description
+            firstname: data.firstname,
+            lastname: data.lastname,
+            license: data.license,
+            carmodel: data.carmodel,
+            carplate: data.carplate,
+            caryear: data.caryear
         }).then((res) => {
             props.setOffers(res.data);
         })
     }
 
     return (
+        <div className='formReact'>
         <Card 
             style={{ width: '36rem' }}
             className="m-auto align-self-center"
@@ -50,38 +53,54 @@ export default function QuoteForm(props) {
                         <Form.Label>Name</Form.Label>
                         <Form.Control 
                             type="text" 
-                            placeholder="Your name" 
-                            onChange={e => setField('name', e.target.value)}
+                            placeholder="First name" 
+                            onChange={e => setField('firstname', e.target.value)}
                         />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="quoteForm.Phone">
-                        <Form.Label>Phone</Form.Label>
                         <Form.Control 
                             type="text" 
-                            placeholder="(000) 000-0000" 
-                            onChange={e => setField('phone', e.target.value)}
+                            placeholder="Last name" 
+                            onChange={e => setField('lastname', e.target.value)}
                         />
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="quoteForm.Email">
-                        <Form.Label>Email address</Form.Label>
+                    <Form.Group className="mb-3" controlId="quoteForm.License">
+                        <Form.Label>Driver License</Form.Label>
                         <Form.Control 
-                            type="text" 
-                            placeholder="name@example.com" 
-                            onChange={e => setField('email', e.target.value)}
+                            type="int" 
+                            placeholder="License number" 
+                            onChange={e => setField('license', e.target.value)}
                         />
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="quoteForm.TextArea">
-                        <Form.Label>Description</Form.Label>
+                    <Form.Group className="mb-3" controlId="quoteForm.Carmodel">
+                        <Form.Label>Car Model</Form.Label>
                         <Form.Control  
-                            type="text" 
-                            as="textarea" rows={3} 
-                            onChange={e => setField('description', e.target.value)}
+                            type="int"
+                            placeholder="Car model" 
+                            onChange={e => setField('carmodel', e.target.value)}
                         />
                     </Form.Group>
-                    { props.user == "Customer" ?
+                    <Form.Group className="mb-3" controlId="quoteForm.Carplate">
+                        <Form.Label>Car Plate</Form.Label>
+                        <Form.Control 
+                            type="text" 
+                            placeholder="Car plate" 
+                            onChange={e => setField('carplate', e.target.value)}
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="quoteForm.Caryear">
+                        <Form.Label>Car Year</Form.Label>
+                        <Form.Control  
+                            type="int" 
+                            placeholder="Car year" 
+                            onChange={e => setField('caryear', e.target.value)}
+                        />
+                    </Form.Group>
+                    <div class="horizontal-center">
+                    { props.user == "Customer 1" || props.user == "Customer 2" ?
                     <Button type="submit">Submit</Button> : "" }
+                    </div>
                 </Form>
             </Card.Body>
         </Card>
+        </div>
     )
 }

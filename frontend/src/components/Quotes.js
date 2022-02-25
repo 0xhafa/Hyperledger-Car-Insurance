@@ -10,19 +10,17 @@ const Quotes = (props) => {
 
   function selectOffer(event) {
     const offerId = event.target.id
-    setOffers(offers => {
-      let index = offers.findIndex(offer => offer.offerId == offerId);
-      offers[index].selected = true;
-      return offers;
-    })
-
-    Axios.post(`${url}/selectOffer`, {offerId: offerId})
+    let index = offers.findIndex(offer => offer.offerId == offerId);
+    let offers_ = [...offers];
+    offers_[index].selected = true;
+    setOffers(offers_);
+    //Axios.post(`${url}/selectOffer`, {offerId: offerId})
   }
 
   return (
     <div>
       <QuoteForm user = {props.user} setOffers={setOffers}/>
-      { props.user == "Customer" ? <Offers offers={offers} selectOffer={selectOffer}/> : ""}
+      { props.user == "Customer 1" || props.user == "Customer 2"  ? <Offers offers={offers} selectOffer={selectOffer}/> : ""}
     </div>
   );
 };

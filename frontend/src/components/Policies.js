@@ -1,170 +1,254 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Popover from 'react-bootstrap/Popover';
+import Modal from 'react-bootstrap/Modal';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import { urlContext } from './urlContext';
+import Form from 'react-bootstrap/Form';
+import Axios from 'axios';
 
 const Policy = (props) => {
-  const [modalData, setModalData] = useState({show: false});
+  const url = React.useContext(urlContext);
+  const [claimForm, setClaimForm] = useState(false);
+  const [policies, setPolicies] = useState([]);
+  const [claimPolicy, setClaimPolicy] = useState(0);
+  const [claimDescription, setClaimDescription] = useState("");
 
-  async function selectOffer(event) {
+  const testPolicies = [{
+    Status: 'PENDING',
+    StartDate: '0',
+    EndDate: '0',
+    MainDriver: {
+        FirstName: 'Teste', 
+        LastName: 'da Silva', 
+        Address: '123 Street', 
+        DriversLicenseNo: '0000000-0'
+    },
+    Car: {
+        Make: 'Fiat',
+        Model: 'Marea',
+        Year: '1998',
+        LicensePlate: 'XYZX-000'
+    },
+    Coverage: {
+        BodilyInjuryLiability:    {Name:"Bodily Injury", Active: true,  CoveredAmount: 9000, ClaimedToDate: 0},
+        PropertyDamageLiability:  {Name:"Property Damage", Active: true,  CoveredAmount: 15000, ClaimedToDate: 0},
+        Collision:                {Name:"Collision", Active: false, CoveredAmount: 0, ClaimedToDate: 0},
+        Comprehensive:            {Name:"Comprehensive", Active: false, CoveredAmount: 0, ClaimedToDate: 0},
+        PersonalInjuryProtection: {Name:"Personal Injury", Active: false, CoveredAmount: 0, ClaimedToDate: 0},
+        UnderinsuredMotorist:     {Name:"Underinsured Motorist", Active: false, CoveredAmount: 0, ClaimedToDate: 0}
+    }
+  },
+  {
+    Status: 'ACTIVE',
+    StartDate: '0',
+    EndDate: '0',
+    MainDriver: {
+        FirstName: 'Teste', 
+        LastName: 'da Silva', 
+        Address: '123 Street', 
+        DriversLicenseNo: '0000000-0'
+    },
+    Car: {
+        Make: 'Fiat',
+        Model: 'Marea',
+        Year: '1998',
+        LicensePlate: 'XYZX-000'
+    },
+    Coverage: {
+        BodilyInjuryLiability:    {Name:"Bodily Injury", Active: true,  CoveredAmount: 9000, ClaimedToDate: 0},
+        PropertyDamageLiability:  {Name:"Property Damage", Active: true,  CoveredAmount: 15000, ClaimedToDate: 0},
+        Collision:                {Name:"Collision", Active: true, CoveredAmount: 99999, ClaimedToDate: 0},
+        Comprehensive:            {Name:"Comprehensive", Active: false, CoveredAmount: 0, ClaimedToDate: 0},
+        PersonalInjuryProtection: {Name:"Personal Injury", Active: false, CoveredAmount: 0, ClaimedToDate: 0},
+        UnderinsuredMotorist:     {Name:"Underinsured Motorist", Active: false, CoveredAmount: 0, ClaimedToDate: 0}
+    }
+  }]
 
+  useEffect(() => {
+    setPolicies(testPolicies);
+    console.log(props.user)
+    //Axios.get(`${url}/getPolicies`, props.user)
+  },[])
+
+  function selectStatus(status){
+        switch(status){
+            case "PENDING":
+                return "Pending ⚪";
+            case "ACTIVE":
+                return "Active 🟢";
+            case "EXPIRED":
+                return "Expired 🔴";
+            case "SUSPENDED":
+                return "Suspended 🟡";
+        }
+    }
+
+    const setField = (value) => {
+        setClaimDescription(value);
+        return;
+    }
+
+  function closeClaim() {
+    setClaimForm(false);
   }
 
-  function handleModal(event) {
-      setModalData({show: true, ...props.Offers[event.target.id]});
+  function openClaim(i) {
+    setClaimPolicy(i);
+    setClaimForm(true);
   }
+
+  function addClaim() {
+    console.log(claimPolicy);
+    console.log(claimDescription);
+    setClaimForm(false);
+    setClaimDescription("");
+    //Axios.get(`${url}/activatePolicy`, [claimPolicy, claimDescription])
+    // .then(setPolicies(res.data))
+  }
+
+  function activatePolicy(i) {
+    let policies_ = [...policies];
+    policies_[i].Status = "ACTIVE";
+    setPolicies(policies_);
+    //Axios.get(`${url}/activatePolicy`, i)
+    // .then(setPolicies(res.data))
+  }
+
+  function suspendPolicy(i) {
+    let policies_ = [...policies];
+    policies_[i].Status = "SUSPENDED";
+    setPolicies(policies_);
+    //Axios.get(`${url}/suspendPolicy`, i)
+    // .then(setPolicies(res.data))
+  }
+  
+  function expirePolicy(i) {
+    let policies_ = [...policies];
+    policies_[i].Status = "EXPIRED";
+    setPolicies(policies_);
+    //Axios.get(`${url}/expirePolicy`, i)
+    // .then(setPolicies(res.data))
+  }
+
 
   return (
     <div className='containerReact'>
-    <div className="w-75 mt-4 mb-4" bg="light">
-          <h1>Policies</h1>
-          <Row xs={1} md={2} xl={4} className="g-4">
-                  <Col key={1} >
-                  <Card bg="light" className="h-100">
-                      <Card.Header>
-                        <>Status: Active 🟢</>
-                      </Card.Header>
-                      <button className="btn" id={1} onClick={handleModal}>
-                          <Card.Body id={1}>
-                              <Card.Title id={1}>
-                                  Company A
-                              </Card.Title>
-                              <Card.Text id={1} >
-                                <ListGroup>
-                                    <ListGroup.Item>✅ Bodily Injury: $99.999</ListGroup.Item>
-                                    <ListGroup.Item>✅ Property Damage: $99.999</ListGroup.Item>
-                                    <ListGroup.Item>✅ Collision: $99.999</ListGroup.Item>
-                                    <ListGroup.Item>✅ Comprehensive: $99.999</ListGroup.Item> 
-                                    <ListGroup.Item>❌ Personal Injury</ListGroup.Item>
-                                    <ListGroup.Item>❌ Underinsured Motorist</ListGroup.Item>
-                                  </ListGroup>
-                              </Card.Text>
-                              <Card.Text id={1} style={{fontWeight: 'bold'}}>
-                                  Click to see policy details
-                              </Card.Text>
-                          </Card.Body>
-                      </button>
-                      <Card.Footer className="mt-auto" style={{ display: "flex" }}>
-                          <Button variant="primary" id={3} 
-                                  style={{ marginLeft: "auto" }}
-                                  onClick={(e) => {selectOffer(e)}}>
-                              Add Claim
-                          </Button>
-                      </Card.Footer>
-                  </Card>
-                  </Col>
+        <div className="w-75 mt-4 mb-4" bg="light">
+            <h1>Policies</h1>
+            <Modal show={claimForm} onHide={closeClaim}>
+                <Modal.Header closeButton>
+                <Modal.Title>Claim</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                <Form.Group className="mb-3" controlId="quoteForm.Carear">
+                        <Form.Label>What happened?</Form.Label>
+                        <Form.Control  
+                            type="int" 
+                            as="textarea" rows={3} 
+                            onChange={e => setField(e.target.value)}
+                        />
+                </Form.Group>
+                </Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={closeClaim}>
+                    Close
+                </Button>
+                <Button variant="primary" onClick={addClaim}>
+                    Send Claim
+                </Button>
+                </Modal.Footer>
+            </Modal>
+            <div className="w-75 mt-4 mb-4" bg="light">
+                {policies.length === 0 ? 
+                "" : 
+                <Row xs={1} md={1} xl={2} className="g-3">
+                    {policies.map((policy, i) => (
+                        <Col key={i}>
+                        <Card bg="light" className="h-100">
+                        <Card.Header>
+                            {`Status: ${selectStatus(policy.Status)}`}
+                        </Card.Header>
+                            <OverlayTrigger trigger="click" placement="top" overlay={
+                                <Popover id="popover-basic">
+                                    <Popover.Header as="h3">Policy Details</Popover.Header>
+                                    <Popover.Body>
+                                        {JSON.stringify(policy.MainDriver)}
+                                    </Popover.Body>
+                                </Popover>
+                            }>                                        
+    
+                                <Card.Body id={i}>
+                                    <Card.Text id={i}>
+                                        <ListGroup>
+                                            {Object.values(policy.Coverage).map((cover) => (
+                                                <ListGroup.Item className="d-flex">{`${cover.Active? '✅': '❌'} ${cover.Name} ${cover.CoveredAmount == 0 ? "" : `$ ${cover.CoveredAmount}`}`}</ListGroup.Item>
+                                            ))}
+                                        </ListGroup>
+                                    </Card.Text>
+                                    <Card.Text id={i} style={{fontWeight: 'bold'}}>
+                                        Click to see policy details
+                                    </Card.Text>
+                                </Card.Body>
 
-                  <Col key={2} >
-                  <Card bg="light" className="h-100">
-                      <Card.Header>
-                        <>Status: Suspended 🟡</>
-                      </Card.Header>
-                      <button className="btn" id={2} onClick={handleModal}>
-                          <Card.Body id={2}>
-                              <Card.Title id={2}>
-                                  Company B
-                              </Card.Title>
-                                <ListGroup>
-                                  <ListGroup.Item>✅ Bodily Injury: $99.999</ListGroup.Item>
-                                  <ListGroup.Item>✅ Property Damage: $99.999</ListGroup.Item>
-                                  <ListGroup.Item>✅ Collision: $99.999</ListGroup.Item>
-                                  <ListGroup.Item>✅ Comprehensive: $99.999</ListGroup.Item> 
-                                  <ListGroup.Item>❌ Personal Injury</ListGroup.Item>
-                                  <ListGroup.Item>❌ Underinsured Motorist</ListGroup.Item>
-                                </ListGroup>
-                              <Card.Text id={2} style={{fontWeight: 'bold'}}>
-                                  Click to see policy details
-                              </Card.Text>
-                          </Card.Body>
-                      </button>
-                      <Card.Footer className="mt-auto" style={{ display: "flex" }}>
-                          <Button variant="secondary" id={3} 
-                                  style={{ marginLeft: "auto" }}
-                                  onClick={(e) => {selectOffer(e)}}
-                                  disabled>
-                              Add Claim
-                          </Button>
-                      </Card.Footer>
-                  </Card>
-                  </Col>
-
-                  <Col key={3} >
-                  <Card bg="light" className="h-100">
-                      <Card.Header>
-                        <>Status: Pending ⚪</>
-                      </Card.Header>
-                      <button className="btn" id={3} onClick={handleModal}>
-                          <Card.Body id={3}>
-                              <Card.Title id={3}>
-                                  Company C
-                              </Card.Title>
-                              <Card.Text id={3}>
-                                <ListGroup>
-                                  <ListGroup.Item>✅ Bodily Injury: $99.999</ListGroup.Item>
-                                  <ListGroup.Item>✅ Property Damage: $99.999</ListGroup.Item>
-                                  <ListGroup.Item>✅ Collision: $99.999</ListGroup.Item>
-                                  <ListGroup.Item>✅ Comprehensive: $99.999</ListGroup.Item> 
-                                  <ListGroup.Item>❌ Personal Injury</ListGroup.Item>
-                                  <ListGroup.Item>❌ Underinsured Motorist</ListGroup.Item>
-                                </ListGroup>
-                              </Card.Text>
-                              <Card.Text id={3} style={{fontWeight: 'bold'}}>
-                                  Click to see policy details
-                              </Card.Text>
-                          </Card.Body>
-                      </button>
-                      <Card.Footer className="mt-auto" style={{ display: "flex" }}>
-                          <Button variant="secondary" id={3} 
-                                  style={{ marginLeft: "auto" }}
-                                  onClick={(e) => {selectOffer(e)}}
-                                  disabled>
-                              Add Claim
-                          </Button>
-                      </Card.Footer>
-                  </Card>
-                  </Col>
-
-                  <Col key={4} >
-                  <Card bg="light" className="h-100">
-                      <Card.Header>
-                        <>Status: Expired 🔴</>
-                      </Card.Header>
-                      <button className="btn" id={4} onClick={handleModal}>
-                          <Card.Body id={4}>
-                              <Card.Title id={4}>
-                                  Company C
-                              </Card.Title>
-                              <Card.Text id={4}>
-                                <ListGroup>
-                                  <ListGroup.Item>✅ Bodily Injury: $99.999</ListGroup.Item>
-                                  <ListGroup.Item>✅ Property Damage: $99.999</ListGroup.Item>
-                                  <ListGroup.Item>✅ Collision: $99.999</ListGroup.Item>
-                                  <ListGroup.Item>✅ Comprehensive: $99.999</ListGroup.Item> 
-                                  <ListGroup.Item>❌ Personal Injury</ListGroup.Item>
-                                  <ListGroup.Item>❌ Underinsured Motorist</ListGroup.Item>
-                                </ListGroup>
-                              </Card.Text>
-                              <Card.Text id={4} style={{fontWeight: 'bold'}}>
-                                  Click to see policy details
-                              </Card.Text>
-                          </Card.Body>
-                      </button>
-                      <Card.Footer className="mt-auto" style={{ display: "flex" }}>
-                          <Button variant="secondary" id={4} 
-                                  style={{ marginLeft: "auto" }}
-                                  onClick={(e) => {selectOffer(e)}}
-                                  disabled>
-                              Add Claim
-                          </Button>
-                      </Card.Footer>
-                  </Card>
-                  </Col>
-          </Row>
-    </div>
+                            </OverlayTrigger>
+                            <Card.Footer className="mt-auto" style={{ display: "flex" }}>
+                                {(props.user === "Customer 1" || props.user === "Customer 2")
+                                    && policy.Status === "ACTIVE" ?
+                                <Button variant="outline-dark" 
+                                    style={{ marginLeft: "auto" }}
+                                    onClick={(e) => {openClaim(i)}}>
+                                    Add Claim
+                                </Button> : 
+                                (props.user === "InsuranceManager" || props.user === "InsuranceWorker") 
+                                && policy.Status == "PENDING" ? 
+                                <Button variant="outline-dark"
+                                    id={i}
+                                    style={{ marginLeft: "auto" }}
+                                    onClick={(e) => {activatePolicy(i)}}>
+                                    Activate
+                                </Button> :
+                                (props.user === "InsuranceManager") 
+                                && policy.Status == "ACTIVE" ? 
+                                <>
+                                <Button variant="outline-dark"
+                                    id={i}
+                                    style={{ marginLeft: "auto" }}
+                                    onClick={(e) => {suspendPolicy(i)}}>
+                                    Suspend
+                                </Button>
+                                <Button variant="outline-dark"
+                                    id={i}
+                                    style={{ marginLeft: "auto" }}
+                                    onClick={(e) => {expirePolicy(i)}}>
+                                    Expire
+                                </Button>
+                                </> : 
+                                props.user === "InsuranceWorker" 
+                                && policy.Status === "ACTIVE" ? 
+                                <Button variant="outline-dark"
+                                    id={i}
+                                    style={{ marginLeft: "auto" }}
+                                    onClick={(e) => {expirePolicy(i)}}>
+                                    Expire
+                                </Button>
+                                : ""
+                                }
+                            </Card.Footer>
+                        </Card>
+                        </Col>
+                    ))}
+                </Row>}
+            </div>
+        </div>
     </div>
   );
 };
 
 export default Policy;
+
+

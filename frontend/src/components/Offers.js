@@ -8,23 +8,14 @@ import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Axios from 'axios';
 
-const popover = () => {
-    <Popover id="popover-basic">
-      <Popover.Header as="h3">Popover right</Popover.Header>
-      <Popover.Body>
-        And here's some <strong>amazing</strong> content. It's very engaging.
-        right?
-      </Popover.Body>
-    </Popover>
-};
-
 // maintains the main grid of the Offers based on current user
 export default function Offers(props) {
     const [modalData, setModalData] = useState({show: false});
 
-    function handleModal(event) {
-        setModalData({show: true, ...props.Offers[event.target.id]});
-    }
+    useEffect(() =>{
+        console.log("changed")
+    },[props.offers])
+
 
     return (
         <div className='containerReact'>
@@ -33,9 +24,9 @@ export default function Offers(props) {
                 <div className="w-75 mt-4 mb-4" bg="light">
                     {props.offers.length === 0 ? 
                     "" : 
-                    <Row xs={1} md={2} xl={4} className="g-4">
+                    <Row xs={1} md={2} xl={3} className="g-3">
                         {props.offers.map((offer, i) => (
-                            <Col key={i*100 +i}>
+                            <Col key={i}>
                             {!offer.selected && props.offers.some(offer => offer.selected) ? "" :
                             <Card bg="light" className="h-100">
                             <Card.Header>
@@ -49,7 +40,7 @@ export default function Offers(props) {
                                         </Popover.Body>
                                     </Popover>
                                 }>                                        
-                                <button className="btn" id={i} onClick={handleModal}>
+                                
                                     <Card.Body id={i}>
                                         <Card.Text id={i}>
                                             <ListGroup>
@@ -62,7 +53,7 @@ export default function Offers(props) {
                                             Click to see policy details
                                         </Card.Text>
                                     </Card.Body>
-                                </button>
+                                
                                 </OverlayTrigger>
                                 <Card.Footer className="mt-auto" style={{ display: "flex" }}>
                                     <h3>{`Total: $ ${offer.price}`}</h3>

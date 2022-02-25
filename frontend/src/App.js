@@ -15,27 +15,20 @@ import {
 import {urlContext} from './components/urlContext';
 
 function App() {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState("Customer 1");
   // const [quote, setQuote] = useState([]);
-
-  useEffect(async () => {
-    setUser(JSON.parse(window.localStorage.getItem('user')));
-  },[])
-
-  useEffect(() => {
-      window.localStorage.setItem('user', JSON.stringify(user));
-  }, [user])
 
   const handleUser = (e) => {
       setUser(e.target.value); 
   }
   
   return (
-    <urlContext.Provider value={'http://34.121.198.33:5986'}>
+    <urlContext.Provider value={'http://34.136.154.88:5986'}>
       <div className="bg-light">
         <Form.Select onChange = { handleUser } value={ user } size="sm" >
           <option disabled>Select User Type</option>
-          <option value="Customer">Customer</option>
+          <option value="Customer 1">Customer 1</option>
+          <option value="Customer 2">Customer 2</option>
           <option value="InsuranceWorker">Insurance Worker</option>
           <option value="InsuranceManager">Insurance Manager</option>
           <option value="Authority">Authority</option>
