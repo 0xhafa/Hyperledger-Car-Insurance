@@ -1,6 +1,8 @@
 const {defaultPolicy, Insurance} = require('./utils/insuranceLib');
 const fs = require('fs');
+const axios = require('axios');
 
+const makePaymentEndpoint = `${process.env.BACKEND_URL}/makePayment`;
 const identities = JSON.parse(fs.readFileSync(process.env.INITIAL_IDENTITIES));
 
 const main = async () => {
@@ -25,10 +27,15 @@ const main = async () => {
     const policyNo2 = await customer2.submitPolicy(policy);
     console.log(policyNo2);
 
+    console.log(`Making premium payment for policy ${policyNo1}`);
+    await axios.get(`${makePaymentEndpoint}?policyNo=${policyNo1}`);
     let hash = await worker.activatePolicy(policyNo1);
     let hashConfirmation = await worker.updatePolicyMetadata(policyNo1);
     console.log(hash);
     console.log(hashConfirmation);
+
+    console.log(`Making premium payment for policy ${policyNo2}`);
+    await axios.get(`${makePaymentEndpoint}?policyNo=${policyNo2}`);
     hash = await manager.activatePolicy(policyNo2);
     hashConfirmation = await manager.updatePolicyMetadata(policyNo2);
     console.log(hash);

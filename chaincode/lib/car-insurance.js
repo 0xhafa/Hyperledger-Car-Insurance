@@ -7,7 +7,7 @@
 const { Contract } = require('fabric-contract-api');
 const crypto = require('crypto');
 const axios = require('axios');
-const isPaidEndpoint = require('./isPaidEndpoint.json').endpoint;
+const backendUrl = require('./backend.json').url;
 
 const POLICY_STATE = {
     PENDING: 'PENDING',
@@ -146,7 +146,7 @@ class CarInsurance extends Contract {
             await this.AuthorizeRole(ctx, policyNo, 'manager');
         }
 
-        await axios.get(`${isPaidEndpoint}?policyNo=${policyNo}`)
+        await axios.get(`${backendUrl}/isPaid?policyNo=${policyNo}`)
         .then(result => {
             if(result.data !== 'PAID') 
                 throw new Error(`The policy ${policyNo} premium is not paid yet`);

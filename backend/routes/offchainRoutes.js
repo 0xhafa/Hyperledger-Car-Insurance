@@ -1,12 +1,33 @@
 const fs = require('fs');
 const express = require('express');
 const moment = require('moment');
-const {defaultPolicy} = require('../utils/insuranceLib');
+const {defaultPolicy, Insurance} = require('../utils/insuranceLib');
 require('dotenv').config();
 
 const router = express.Router();
 const offersPath = process.env.OFFERS;
 const paymentsPath = process.env.PAYMENTS;
+
+async function simulatePayment(policyNo) {
+  let payments = {};
+  if(fs.existsSync(paymentsPath)) {
+    payments = JSON.parse(fs.readFileSync(paymentsPath));
+  }
+
+  let success = false;
+  try {
+    let insurance = await new Insurance('worker').init();
+    let policy = await insurance.readPolicy(policyNo);
+    if(policy.State === 'PENDING') success = true;
+  } catch(error) {
+    console.log(error.message);
+  }
+
+  if(success) payments[policyNo] = true;
+  fs.writeFileSync(paymentsPath, JSON.stringify(payments, null, 2));
+  await new Promise(resolve => setTimeout(resolve, 5000));
+  return success;
+}
 
 router.post('/getOffers', function(req, res) {
   let userData = req.body;
@@ -72,14 +93,23 @@ router.post('/getOffers', function(req, res) {
   fs.writeFileSync(offersPath, JSON.stringify(storedOffers, null, 2));
 });
 
+router.get('/makePayment', async function(req, res) {
+  let policyNo = req.query.policyNo;
+  let result = await simulatePayment(policyNo);
+
+  if(result) res.status(200).send('SUCCESS');
+  else res.status(200).send('DECLINED');
+});
+
 router.get('/isPaid', function(req, res) {
   if(!fs.existsSync(paymentsPath)) {
     res.status(200).send('NOT PAID');
     return;
   }
   
+  let policyNo = req.query.policyNo;
   let payments = JSON.parse(fs.readFileSync(paymentsPath));
-  if(payments[req.query.policyNo]) res.status(200).send('PAID');
+  if(payments[policyNo]) res.status(200).send('PAID');
   else res.status(200).send('NOT PAID');
 });
 

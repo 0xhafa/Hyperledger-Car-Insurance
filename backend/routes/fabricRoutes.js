@@ -5,18 +5,8 @@ require('dotenv').config();
 
 const router = express.Router();
 const offersPath = process.env.OFFERS;
-const paymentsPath = process.env.PAYMENTS;
 
-function simulatePayment(policyNo) {
-  let payments = {};
-  if(fs.existsSync(paymentsPath)) {
-    payments = JSON.parse(fs.readFileSync(paymentsPath));
-  }
-  payments[policyNo] = true;
-  fs.writeFileSync(paymentsPath, JSON.stringify(payments, null, 2));
-}
-
-router.post('/selectOffer', async function(req, res) {
+router.post('/submitPolicy', async function(req, res) {
   let selectedId = req.body.offerId;
   let storedOffers = JSON.parse(fs.readFileSync(offersPath));
   let selectedOffer = storedOffers[selectedId];
@@ -31,10 +21,6 @@ router.post('/selectOffer', async function(req, res) {
     let policyNo = await insurance.submitPolicy(selectedOffer);
     res.status(200).json({policyNo});
 
-    setTimeout(() => {
-      simulatePayment(policyNo);
-    }, 10000);
-
     for(let id in storedOffers) {
       if(storedOffers[id].userId !== selectedOffer.userId) continue;
       delete storedOffers[id];
@@ -45,96 +31,83 @@ router.post('/selectOffer', async function(req, res) {
   fs.writeFileSync(offersPath, JSON.stringify(storedOffers, null, 2));
 });
 
-// router.get('/submitpolicy', function(req, res) {
-//   let data = req.body.data;
-//   let insuranceNetwork = new InsuranceNetwork(req.body.user);
+router.post('/addClaim', async function(req, res) {
+  let {userId, policyNo, claimDescription} = req.body;
 
-//   insuranceNetwork.submitPolicy(data)
-//   .then((data) => {
-//     res.status(200).json(data)
-//   })
-//   .catch((err) => {
-//     res.status(500).json({error: err.toString()})
-//   })
-// });
+  try {
+    let insurance = await new Insurance(userId).init();
+    let claimNo = await insurance.addClaim(policyNo, claimDescription);
+    res.status(200).json({claimNo});   
+  } catch(error) {
+    res.status(500).json({error: error.message});
+  }
+});
 
-// router.get('/activatepolicy', function(req, res) {
-//   let data = req.body.data;
-//   let insuranceNetwork = new InsuranceNetwork(req.body.user);
+router.get('/activatePolicy', async function(req, res) {
+  let userId = req.query.userId;
+  let policyNo = req.query.policyNo;
 
-//   insuranceNetwork.activatePolicy(data)
-//   .then((data) => {
-//     res.status(200).json(data)
-//   })
-//   .catch((err) => {
-//     res.status(500).json({error: err.toString()})
-//   }) 
-// });
+  try {
+    let insurance = await new Insurance(userId).init();
+    await insurance.activatePolicy(policyNo);
+    let hash = await insurance.updatePolicyMetadata(policyNo);
+    res.status(200).json({hash});   
+  } catch(error) {
+    res.status(500).json({error: error.message});
+  }
+});
 
-// router.get('/expirepolicy', function(req, res) {
-//   let data = req.body.data;
-//   let insuranceNetwork = new InsuranceNetwork(req.body.user);
+router.get('/expirePolicy', async function(req, res) {
+  let userId = req.query.userId;
+  let policyNo = req.query.policyNo;
 
-//   insuranceNetwork.expirePolicy(data)
-//   .then((data) => {
-//     res.status(200).json(data)
-//   })
-//   .catch((err) => {
-//     res.status(500).json({error: err.toString()})
-//   })
-// });
+  try {
+    let insurance = await new Insurance(userId).init();
+    await insurance.expirePolicy(policyNo);
+    let hash = await insurance.updatePolicyMetadata(policyNo);
+    res.status(200).json({hash});   
+  } catch(error) {
+    res.status(500).json({error: error.message});
+  }
+});
 
-// router.get('/suspendpolicy', function(req, res) {
-//   let data = req.body.data;
-//   let insuranceNetwork = new InsuranceNetwork(req.body.user);
+router.get('/suspendPolicy', async function(req, res) {
+  let userId = req.query.userId;
+  let policyNo = req.query.policyNo;
 
-//   insuranceNetwork.suspendPolicy(data)
-//   .then((data) => {
-//     res.status(200).json(data)
-//   })
-//   .catch((err) => {
-//     res.status(500).json({error: err.toString()})
-//   }) 
-// });
+  try {
+    let insurance = await new Insurance(userId).init();
+    await insurance.suspendPolicy(policyNo);
+    let hash = await insurance.updatePolicyMetadata(policyNo);
+    res.status(200).json({hash});   
+  } catch(error) {
+    res.status(500).json({error: error.message});
+  }
+});
 
-// router.post('/addclaim', function(req, res) {
-//   let data = req.body.data;
-//   let insuranceNetwork = new InsuranceNetwork(req.body.user);
+router.post('/reviewClaim', async function(req, res) {
+  let {userId, policyNo, claimNo, newState, amounts} = req.body;
 
-//   insuranceNetwork.addClaim(data)
-//   .then((data) => {
-//     res.status(200).json(data)
-//   })
-//   .catch((err) => {
-//     res.status(500).json({error: err.toString()})
-//   })
-// });
+  try {
+    let insurance = await new Insurance(userId).init();
+    await insurance.reviewClaim(policyNo, claimNo, newState, amounts);
+    res.status(200).send('SUCCESS');
+  } catch(error) {
+    res.status(500).json({error: error.message});
+  }
+});
 
-// router.get('/reviewclaim', function(req, res) {
-//   let data = req.body.data;
-//   let insuranceNetwork = new InsuranceNetwork(req.body.user);
+router.post('/payoutClaim', async function(req, res) {
+  let {userId, policyNo, claimNo} = req.body;
 
-//   insuranceNetwork.reviewClaim(data)
-//   .then((data) => {
-//     res.status(200).json(data)
-//   })
-//   .catch((err) => {
-//     res.status(500).json({error: err.toString()})
-//   })
-// });
-
-// router.get('/payoutclaim', function(req, res) {
-//   let data = req.body.data;
-//   let insuranceNetwork = new InsuranceNetwork(req.body.user);
-
-//   insuranceNetwork.payoutClaim(data)
-//   .then((data) => {
-//     res.status(200).json(data)
-//   })
-//   .catch((err) => {
-//     res.status(500).json({error: err.toString()})
-//   })
-// });
-
+  try {
+    let insurance = await new Insurance(userId).init();
+    await insurance.payoutClaim(policyNo, claimNo);
+    let hash = await insurance.updatePolicyMetadata(policyNo);
+    res.status(200).json({hash});
+  } catch(error) {
+    res.status(500).json({error: error.message});
+  }
+});
 
 module.exports = router;
