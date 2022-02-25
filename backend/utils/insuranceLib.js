@@ -4,59 +4,57 @@
 
 'use strict';
 
+const path = require('path');
 const { Gateway, Wallets } = require('fabric-network');
 const FabricCAServices = require('fabric-ca-client');
 const crypto = require('crypto');
-const path = require('path');
 require('dotenv').config();
 
-const { buildCAClient } = require('./utils/CAUtil.js');
-const { buildCCP, buildWallet } = require('./utils/AppUtil.js');
+const { buildCAClient } = require('./CAUtil.js');
+const { buildCCP, buildWallet } = require('./AppUtil.js');
 
 const channelName = process.env.CHANNEL_NAME;
 const chaincodeName =  process.env.CHAINCODE_NAME;
 const orgMSP = process.env.ORG_MSP;
-const walletPath = path.join(__dirname, 'wallet');
+const walletPath = path.join(__dirname, '..', 'wallet');
 
-class Insurance {
-    defaultPolicy() {
-        const defaultCoverage = {
-            Active: false,  
-            CoveredAmount: 0, 
-            ClaimedToDate: 0
-        };
+function defaultPolicy() {
+    const defaultCoverage = {
+        Active: false,  
+        CoveredAmount: 0, 
+        ClaimedToDate: 0
+    };
 
-        return {
-            StartDate: '',
-            EndDate: '',
-            MainDriver: {
-                FirstName: '', 
-                LastName: '', 
-                Address: '', 
-                DriversLicenseNo: ''
-            },
-            Car: {
-                Make: '',
-                Model: '',
-                Year: '',
-                LicensePlate: ''
-            },
-            Coverage: {
-                BodilyInjuryLiability:    defaultCoverage,
-                PropertyDamageLiability:  defaultCoverage,
-                Collision:                defaultCoverage,
-                PersonalInjuryProtection: defaultCoverage,
-                UnderinsuredMotorist:     defaultCoverage
-            }
+    return {
+        StartDate: '',
+        EndDate: '',
+        MainDriver: {
+            FirstName: '', 
+            LastName: '', 
+            DriversLicenseNo: ''
+        },
+        Car: {
+            Model: '',
+            Year: '',
+            LicensePlate: ''
+        },
+        Coverage: {
+            BodilyInjuryLiability:    defaultCoverage,
+            PropertyDamageLiability:  defaultCoverage,
+            Collision:                defaultCoverage,
+            PersonalInjuryProtection: defaultCoverage,
+            UnderinsuredMotorist:     defaultCoverage
         }
     }
+}
 
-    constructor(user) {
+class Insurance {
+    constructor(userId) {
         this.channelName = channelName;
         this.chaincodeName = chaincodeName;
         this.orgMSP = orgMSP;
         this.walletPath = walletPath;
-        this.user = user;
+        this.userId = userId;
         this.ccp = buildCCP();
         this.caClient = buildCAClient(FabricCAServices, this.ccp, `ca.${this.orgMSP}.example.com`);
         this.gateway = new Gateway();
@@ -69,7 +67,7 @@ class Insurance {
 
         await this.gateway.connect(this.ccp, {
             wallet: this.wallet,
-            identity: this.user.userId,
+            identity: this.userId,
             discovery: { enabled: true, asLocalhost: true }
         });
 
@@ -172,4 +170,4 @@ class Insurance {
     }
 }
 
-module.exports = Insurance;
+module.exports = {defaultPolicy, Insurance};

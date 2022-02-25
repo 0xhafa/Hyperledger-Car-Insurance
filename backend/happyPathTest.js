@@ -1,18 +1,18 @@
-const Insurance = require('./insuranceLib');
+const {defaultPolicy, Insurance} = require('./utils/insuranceLib');
 const fs = require('fs');
 
 const identities = JSON.parse(fs.readFileSync(process.env.INITIAL_IDENTITIES));
 
 const main = async () => {
-    const customer1 = await new Insurance(identities[0]).init();
-    const customer2 = await new Insurance(identities[1]).init();
-    const worker = await new Insurance(identities[2]).init();
-    const manager = await new Insurance(identities[3]).init();
-    const adjuster = await new Insurance(identities[4]).init();
-    const bookkeeper = await new Insurance(identities[5]).init();
-    const reader = await new Insurance(identities[6]).init();
+    const customer1 = await new Insurance(identities[0].userId).init();
+    const customer2 = await new Insurance(identities[1].userId).init();
+    const worker = await new Insurance(identities[2].userId).init();
+    const manager = await new Insurance(identities[3].userId).init();
+    const adjuster = await new Insurance(identities[4].userId).init();
+    const bookkeeper = await new Insurance(identities[5].userId).init();
+    const reader = await new Insurance(identities[6].userId).init();
 
-    const policy = customer1.defaultPolicy();
+    const policy = defaultPolicy();
     policy.Coverage.BodilyInjuryLiability.Active = true;
     policy.Coverage.BodilyInjuryLiability.CoveredAmount = 10000;
     policy.Coverage.PropertyDamageLiability.Active = true;

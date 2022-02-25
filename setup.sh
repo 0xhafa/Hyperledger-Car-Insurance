@@ -1,5 +1,7 @@
 #!/bin/bash
 
+BACKEND_IP_AND_PORT="34.121.198.33:5986"
+
 # install backend dependencies
 cd ./backend
 npm install
@@ -13,6 +15,7 @@ cd ./network
 
 # install chaincode dependencies
 cd ../chaincode
+echo "{\"endpoint\":\"http://$BACKEND_IP_AND_PORT/isPaid\"}" > ./lib/isPaidEndpoint.json
 npm install
 cd ../network
 

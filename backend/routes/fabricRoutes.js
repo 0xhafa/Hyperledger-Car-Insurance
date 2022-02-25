@@ -1,35 +1,49 @@
+const fs = require('fs');
 const express = require('express');
+const {Insurance} = require('../utils/insuranceLib');
+require('dotenv').config();
+
 const router = express.Router();
-//const jsonManager = require('../utils/jsonManager');
-//const InsuranceNetwork = require('./InsuranceNetwork');
-const fs = require('fs')
-const Isurance = require('../insuranceLib');
+const offersPath = process.env.OFFERS;
+const paymentsPath = process.env.PAYMENTS;
 
-const identities = JSON.parse(fs.readFileSync(process.env.INITIAL_IDENTITIES));
+function simulatePayment(policyNo) {
+  let payments = {};
+  if(fs.existsSync(paymentsPath)) {
+    payments = JSON.parse(fs.readFileSync(paymentsPath));
+  }
+  payments[policyNo] = true;
+  fs.writeFileSync(paymentsPath, JSON.stringify(payments, null, 2));
+}
 
-router.post('/quote', function(req, res) {
-  let baseOffers = JSON.parse(fs.readFileSync("./json/base_offers.json"));
-  let id = 0;
-  let offers = baseOffers.map(offer => {
-    offer.offerId = id++;
-    offer.selected = false;
-    return {...req.body, ...offer}
-  });
-  fs.writeFileSync("./json/offers.json", JSON.stringify(offers, null, 2));
-  res.json(offers);
+router.post('/selectOffer', async function(req, res) {
+  let selectedId = req.body.offerId;
+  let storedOffers = JSON.parse(fs.readFileSync(offersPath));
+  let selectedOffer = storedOffers[selectedId];
+
+  if(!selectedOffer) {
+    res.sendStatus(500);
+    return;
+  }
+
+  try {
+    let insurance = await new Insurance(selectedOffer.userId).init();
+    let policyNo = await insurance.submitPolicy(selectedOffer);
+    res.status(200).json({policyNo});
+
+    setTimeout(() => {
+      simulatePayment(policyNo);
+    }, 10000);
+
+    for(let id in storedOffers) {
+      if(storedOffers[id].userId !== selectedOffer.userId) continue;
+      delete storedOffers[id];
+    }
+  } catch(error) {
+    res.status(500).json({error: error.message});
+  }
+  fs.writeFileSync(offersPath, JSON.stringify(storedOffers, null, 2));
 });
-
-router.post('/selectOffer', function(req, res) {
-  let offers = JSON.parse(fs.readFileSync("./json/offers.json"));
-  let index = offers.findIndex(offer => offer.offerId == req.body.offerId);
-  //offers[index].selected = true;
-
-  const customer = await new Insurance(identities[0]).init();
-  const policyNo1 = await customer.submitPolicy(policy);
-
-  //fs.writeFileSync("./json/offers.json", JSON.stringify(offers, null, 2))
-  res.json({});
-})
 
 // router.get('/submitpolicy', function(req, res) {
 //   let data = req.body.data;
