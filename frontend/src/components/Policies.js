@@ -76,22 +76,21 @@ const Policy = (props) => {
   },[])
 
   function selectStatus(status){
-        switch(status){
-            case "PENDING":
-                return "Pending ⚪";
-            case "ACTIVE":
-                return "Active 🟢";
-            case "EXPIRED":
-                return "Expired 🔴";
-            case "SUSPENDED":
-                return "Suspended 🟡";
-        }
+    switch(status){
+      case "PENDING":
+        return "Pending ⚪";
+      case "ACTIVE":
+        return "Active 🟢";
+      case "EXPIRED":
+        return "Expired 🔴";
+      case "SUSPENDED":
+        return "Suspended 🟡";
     }
+  }
 
-    const setField = (value) => {
-        setClaimDescription(value);
-        return;
-    }
+  function setField(value) {
+    setClaimDescription(value);
+  }
 
   function closeClaim() {
     setClaimForm(false);
@@ -103,8 +102,6 @@ const Policy = (props) => {
   }
 
   function addClaim() {
-    console.log(claimPolicy);
-    console.log(claimDescription);
     setClaimForm(false);
     setClaimDescription("");
     //Axios.get(`${url}/activatePolicy`, [claimPolicy, claimDescription])
@@ -138,113 +135,127 @@ const Policy = (props) => {
 
   return (
     <div className='containerReact'>
-        <div className="w-75 mt-4 mb-4" bg="light">
-            <h1>Policies</h1>
-            <Modal show={claimForm} onHide={closeClaim}>
-                <Modal.Header closeButton>
-                <Modal.Title>Claim</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                <Form.Group className="mb-3" controlId="quoteForm.Carear">
-                        <Form.Label>What happened?</Form.Label>
-                        <Form.Control  
-                            type="int" 
-                            as="textarea" rows={3} 
-                            onChange={e => setField(e.target.value)}
-                        />
-                </Form.Group>
-                </Modal.Body>
-                <Modal.Footer>
-                <Button variant="secondary" onClick={closeClaim}>
-                    Close
-                </Button>
-                <Button variant="primary" onClick={addClaim}>
-                    Send Claim
-                </Button>
-                </Modal.Footer>
-            </Modal>
-            <div className="w-75 mt-4 mb-4" bg="light">
-                {policies.length === 0 ? 
-                "" : 
-                <Row xs={1} md={1} xl={2} className="g-3">
-                    {policies.map((policy, i) => (
-                        <Col key={i}>
-                        <Card bg="light" className="h-100">
-                        <Card.Header>
-                            {`Status: ${selectStatus(policy.Status)}`}
-                        </Card.Header>
-                            <OverlayTrigger trigger="click" placement="top" overlay={
-                                <Popover id="popover-basic">
-                                    <Popover.Header as="h3">Policy Details</Popover.Header>
-                                    <Popover.Body>
-                                        {JSON.stringify(policy.MainDriver)}
-                                    </Popover.Body>
-                                </Popover>
-                            }>                                        
-    
-                                <Card.Body id={i}>
-                                    <Card.Text id={i}>
-                                        <ListGroup>
-                                            {Object.values(policy.Coverage).map((cover) => (
-                                                <ListGroup.Item className="d-flex">{`${cover.Active? '✅': '❌'} ${cover.Name} ${cover.CoveredAmount == 0 ? "" : `$ ${cover.CoveredAmount}`}`}</ListGroup.Item>
-                                            ))}
-                                        </ListGroup>
-                                    </Card.Text>
-                                    <Card.Text id={i} style={{fontWeight: 'bold'}}>
-                                        Click to see policy details
-                                    </Card.Text>
-                                </Card.Body>
+      <div className="w-75 mt-4 mb-4" bg="light">
+        <h1>Policies</h1>
+        <Modal show={claimForm} onHide={closeClaim}>
+          <Modal.Header closeButton>
+          <Modal.Title>Claim</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+          <Form.Group className="mb-3" controlId="quoteForm.Carear">
+            <Form.Label>What happened?</Form.Label>
+            <Form.Control  
+              type="int" 
+              as="textarea" rows={3} 
+              onChange={e => setField(e.target.value)}
+            />
+          </Form.Group>
+          </Modal.Body>
+          <Modal.Footer>
+          <Button variant="secondary" onClick={closeClaim}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={addClaim}>
+            Send Claim
+          </Button>
+          </Modal.Footer>
+        </Modal>
+      <div className="w-75 mt-4 mb-4" bg="light">
+          {policies.length === 0 ? 
+          "" : 
+          <Row xs={1} md={1} xl={2} className="g-3">
+            {policies.map((policy, i) => (
+              <Col key={i}>
+              <Card bg="light" className="h-100">
+              <Card.Header>
+                {`Status: ${selectStatus(policy.Status)}`}
+              </Card.Header>
+                <OverlayTrigger trigger="click" placement="top" overlay={
+                  <Popover id="popover-basic">
+                    <Popover.Header as="h3">Policy Details</Popover.Header>
+                    <Popover.Body>
+                      {JSON.stringify(policy.MainDriver)}
+                    </Popover.Body>
+                  </Popover>
+                }>                                        
 
-                            </OverlayTrigger>
-                            <Card.Footer className="mt-auto" style={{ display: "flex" }}>
-                                {(props.user === "Customer 1" || props.user === "Customer 2")
-                                    && policy.Status === "ACTIVE" ?
-                                <Button variant="outline-dark" 
-                                    style={{ marginLeft: "auto" }}
-                                    onClick={(e) => {openClaim(i)}}>
-                                    Add Claim
-                                </Button> : 
-                                (props.user === "InsuranceManager" || props.user === "InsuranceWorker") 
-                                && policy.Status == "PENDING" ? 
-                                <Button variant="outline-dark"
-                                    id={i}
-                                    style={{ marginLeft: "auto" }}
-                                    onClick={(e) => {activatePolicy(i)}}>
-                                    Activate
-                                </Button> :
-                                (props.user === "InsuranceManager") 
-                                && policy.Status == "ACTIVE" ? 
-                                <>
-                                <Button variant="outline-dark"
-                                    id={i}
-                                    style={{ marginLeft: "auto" }}
-                                    onClick={(e) => {suspendPolicy(i)}}>
-                                    Suspend
-                                </Button>
-                                <Button variant="outline-dark"
-                                    id={i}
-                                    style={{ marginLeft: "auto" }}
-                                    onClick={(e) => {expirePolicy(i)}}>
-                                    Expire
-                                </Button>
-                                </> : 
-                                props.user === "InsuranceWorker" 
-                                && policy.Status === "ACTIVE" ? 
-                                <Button variant="outline-dark"
-                                    id={i}
-                                    style={{ marginLeft: "auto" }}
-                                    onClick={(e) => {expirePolicy(i)}}>
-                                    Expire
-                                </Button>
-                                : ""
-                                }
-                            </Card.Footer>
-                        </Card>
-                        </Col>
-                    ))}
-                </Row>}
-            </div>
+                <Card.Body id={i}>
+                  <Card.Text id={i}>
+                    <ListGroup>
+                      {Object.values(policy.Coverage).map((cover) => (
+                        <ListGroup.Item className="d-flex">{`${cover.Active? '✅': '❌'} ${cover.Name} ${cover.CoveredAmount === 0 ? "" : `$ ${cover.CoveredAmount}`}`}</ListGroup.Item>
+                      ))}
+                    </ListGroup>
+                  </Card.Text>
+                  <Card.Text id={i} style={{fontWeight: 'bold'}}>
+                    Click to see policy details
+                  </Card.Text>
+                </Card.Body>
+
+                  </OverlayTrigger>
+                  <Card.Footer className="mt-auto" style={{ display: "flex" }}>
+                  <div className="col text-center">
+                      {(props.user === "Customer 1" || props.user === "Customer 2")
+                        && policy.Status === "ACTIVE" ?
+                        
+                      <Button variant="primary"
+                        className="w-25"
+                        size="sm"
+                        style={{ marginLeft: "auto" }}
+                        onClick={(e) => {openClaim(i)}}>
+                        Add Claim
+                      </Button>
+                       : 
+                      (props.user === "InsuranceManager" || props.user === "InsuranceWorker") 
+                      && policy.Status === "PENDING" ? 
+                      <Button variant="primary"
+                        className="w-25"
+                        size="sm"
+                        id={i}
+                        style={{ marginLeft: "auto" }}
+                        onClick={(e) => {activatePolicy(i)}}>
+                        Activate
+                      </Button> :
+                      (props.user === "InsuranceManager") 
+                      && policy.Status === "ACTIVE" ? 
+                      <>
+                      <Button variant="warning"
+                        className="w-25"
+                        size="sm"
+                        id={i}
+                        style={{ marginLeft: "auto" }}
+                        onClick={(e) => {suspendPolicy(i)}}>
+                        Suspend
+                      </Button>
+                      <Button variant="danger"
+                        className="w-25"
+                        size="sm"
+                        id={i}
+                        style={{ marginLeft: "auto" }}
+                        onClick={(e) => {expirePolicy(i)}}>
+                        Expire
+                      </Button>
+                      </> : 
+                      props.user === "InsuranceWorker" 
+                      && policy.Status === "ACTIVE" ? 
+                      <Button variant="danger"
+                        className="w-25"
+                        size="sm"
+                        id={i}
+                        style={{ marginLeft: "auto" }}
+                        onClick={(e) => {expirePolicy(i)}}>
+                        Expire
+                      </Button>
+                      : ""
+                      }
+                    </div>
+                  </Card.Footer>
+              </Card>
+              </Col>
+            ))}
+          </Row>}
         </div>
+      </div>
     </div>
   );
 };

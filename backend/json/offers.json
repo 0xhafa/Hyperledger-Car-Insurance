@@ -1,11 +1,7 @@
 [
   {
-    "id": "21645678339867",
-    "user": "Customer",
-    "name": "",
-    "phone": "",
-    "email": "",
-    "description": "",
+    "id": "11645821251050",
+    "user": "Customer 1",
     "duration_years": 1,
     "offer_details": "This is a mock up offer. There's no details available",
     "price": 999,
@@ -48,15 +44,11 @@
       }
     },
     "offerId": 0,
-    "selected": true
+    "selected": false
   },
   {
-    "id": "21645678339867",
-    "user": "Customer",
-    "name": "",
-    "phone": "",
-    "email": "",
-    "description": "",
+    "id": "11645821251050",
+    "user": "Customer 1",
     "duration_years": 1,
     "offer_details": "This is a mock up offer. There's no details available",
     "price": 1299,
@@ -99,15 +91,11 @@
       }
     },
     "offerId": 1,
-    "selected": true
+    "selected": false
   },
   {
-    "id": "21645678339867",
-    "user": "Customer",
-    "name": "",
-    "phone": "",
-    "email": "",
-    "description": "",
+    "id": "11645821251050",
+    "user": "Customer 1",
     "duration_years": 1,
     "offer_details": "This is a mock up offer. There's no details available",
     "price": 1999,

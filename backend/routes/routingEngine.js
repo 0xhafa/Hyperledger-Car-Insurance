@@ -19,7 +19,7 @@ router.post('/quote', function(req, res) {
   res.json(offers);
 });
 
-router.post('/selectOffer', function(req, res) {
+router.post('/selectOffer', async function(req, res) {
   let offers = JSON.parse(fs.readFileSync("./json/offers.json"));
   let index = offers.findIndex(offer => offer.offerId == req.body.offerId);
   //offers[index].selected = true;
