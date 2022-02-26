@@ -13,6 +13,7 @@ import {
   Route
 } from "react-router-dom";
 import {urlContext} from './components/urlContext';
+const backendUrl = require('./backend.json').url;
 
 function App() {
   const [user, setUser] = useState("customer1");
@@ -22,7 +23,7 @@ function App() {
   }
   
   return (
-    <urlContext.Provider value={'http://34.136.154.88:5986'}>
+    <urlContext.Provider value={backendUrl}>
       <div className="bg-light">
         <Form.Select onChange = { handleUser } value={ user } size="sm" >
         <option disabled>Select User Type</option>

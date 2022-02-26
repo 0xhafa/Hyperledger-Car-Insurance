@@ -39,11 +39,11 @@ function defaultPolicy() {
             LicensePlate: ''
         },
         Coverage: {
-            BodilyInjuryLiability:    defaultCoverage,
-            PropertyDamageLiability:  defaultCoverage,
-            Collision:                defaultCoverage,
-            PersonalInjuryProtection: defaultCoverage,
-            UnderinsuredMotorist:     defaultCoverage
+            BodilyInjuryLiability:    {...defaultCoverage},
+            PropertyDamageLiability:  {...defaultCoverage},
+            Collision:                {...defaultCoverage},
+            PersonalInjuryProtection: {...defaultCoverage},
+            UnderinsuredMotorist:     {...defaultCoverage}
         }
     }
 }
@@ -167,6 +167,30 @@ class Insurance {
     async calculatePolicyHash(policy) {
         policy.Claims = [];
         return crypto.createHash('sha256').update(Buffer.from(JSON.stringify(policy))).digest('hex');
+    }
+
+    async getAllPolicies() {
+        const tx = this.contract.createTransaction('GetAllPolicies');
+        tx.setEndorsingOrganizations(this.orgMSP);
+        return JSON.parse((await tx.evaluate()).toString());
+    }
+
+    async getAllClaims() {
+        const tx = this.contract.createTransaction('GetAllClaims');
+        tx.setEndorsingOrganizations(this.orgMSP);
+        return JSON.parse((await tx.evaluate()).toString());
+    }
+
+    async getAllPoliciesForClient(clientId) {
+        const tx = this.contract.createTransaction('GetAllPoliciesForClient');
+        tx.setEndorsingOrganizations(this.orgMSP);
+        return JSON.parse((await tx.evaluate(clientId)).toString());
+    }
+
+    async getAllClaimsForClient(clientId) {
+        const tx = this.contract.createTransaction('GetAllClaimsForClient');
+        tx.setEndorsingOrganizations(this.orgMSP);
+        return JSON.parse((await tx.evaluate(clientId)).toString());
     }
 }
 

@@ -117,4 +117,58 @@ router.post('/payoutClaim', async function(req, res) {
   }
 });
 
+router.get('/allPolicies', async function(req, res) {
+  let userId = req.query.userId;
+
+  try {
+    let insurance = await new Insurance(userId).init();
+    let policies = await insurance.getAllPolicies();
+    res.status(200).json(policies);   
+    insurance.disconnect();
+  } catch(error) {
+    res.status(500).json({error: error.message});
+  }
+});
+
+router.get('/allPoliciesUser', async function(req, res) {
+  let userId = req.query.userId;
+  let id = req.query.id;
+
+  try {
+    let insurance = await new Insurance(userId).init();
+    let policies = await insurance.getAllPoliciesForClient(id);
+    res.status(200).json(policies);   
+    insurance.disconnect();
+  } catch(error) {
+    res.status(500).json({error: error.message});
+  }
+});
+
+router.get('/allClaims', async function(req, res) {
+  let userId = req.query.userId;
+
+  try {
+    let insurance = await new Insurance(userId).init();
+    let claims = await insurance.getAllClaims();
+    res.status(200).json(claims);   
+    insurance.disconnect();
+  } catch(error) {
+    res.status(500).json({error: error.message});
+  }
+});
+
+router.get('/allClaimsUser', async function(req, res) {
+  let userId = req.query.userId;
+  let id = req.query.id;
+
+  try {
+    let insurance = await new Insurance(userId).init();
+    let claims = await insurance.getAllClaimsForClient(id);
+    res.status(200).json(claims);   
+    insurance.disconnect();
+  } catch(error) {
+    res.status(500).json({error: error.message});
+  }
+});
+
 module.exports = router;

@@ -25,7 +25,7 @@ async function simulatePayment(policyNo) {
 
   if(success) payments[policyNo] = true;
   fs.writeFileSync(paymentsPath, JSON.stringify(payments, null, 2));
-  await new Promise(resolve => setTimeout(resolve, 5000));
+  await new Promise(resolve => setTimeout(resolve, 3000));
   return success;
 }
 

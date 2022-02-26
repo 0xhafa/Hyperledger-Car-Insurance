@@ -88,7 +88,7 @@ class CarInsurance extends Contract {
         const policy = this.ConformPolicy(JSON.parse(ctx.stub.getTransient().get('policy').toString('utf8')));
         policy.Timestamp = ctx.stub.getTxTimestamp();
         policy.PolicyNo = ctx.stub.getTxID();
-        policy.ClientID = ctx.clientIdentity.getID();
+        policy.ClientID = this.ExtractClientName(ctx.clientIdentity.getID());
         policy.InsuranceCompany = ctx.clientIdentity.getMSPID();
         policy.State = POLICY_STATE.PENDING;
 
@@ -104,7 +104,7 @@ class CarInsurance extends Contract {
     */
     async AddClaim(ctx, policyNo) {
         const policy = await this.ReadPolicy(ctx, policyNo);
-        const clientID = ctx.clientIdentity.getID();
+        const clientID = this.ExtractClientName(ctx.clientIdentity.getID());
         if (clientID !== policy.ClientID) {
             throw new Error(`Client ${clientID} is not authorized to make a claim on policy ${policyNo}`);
         }
@@ -307,17 +307,6 @@ class CarInsurance extends Contract {
     }
 
     /*
-    * Calculates hash of a given policy.
-    * 
-    * @param policy     Policy object.
-    * @return Hash of the policy.
-    */
-    CalculatePolicyHash(policy) {
-        policy.Claims = [];
-        return crypto.createHash('sha256').update(Buffer.from(JSON.stringify(policy))).digest('hex');
-    }
-
-    /*
     * Checks whether given policy exists.
     * 
     * @param policyNo     Policy number.
@@ -343,7 +332,7 @@ class CarInsurance extends Contract {
             throw new Error(`The policy ${policyNo} does not exist`);
         }
 
-        if(!(await this.IsAuthorizedToRead(ctx, policyNo))) {
+        if(!(await this.IsAuthorizedToReadGiven(ctx, policyNo))) {
             throw new Error(`Client is not authorized to read the policy ${policyNo}`);
         }
 
@@ -366,16 +355,29 @@ class CarInsurance extends Contract {
     * @param policyNo     Policy number.
     * @return True if authorized, false otherwise.
     */
-    async IsAuthorizedToRead(ctx, policyNo) {
-        const authRoles = ['worker', 'manager', 'adjuster', 'bookkeeper', 'reader'];
+    async IsAuthorizedToReadGiven(ctx, policyNo) {
         const policy = JSON.parse(await ctx.stub.getPrivateData("policies", policyNo));
         const clientMSPID = ctx.clientIdentity.getMSPID();
-        const clientID = ctx.clientIdentity.getID();
-        const role = ctx.clientIdentity.getAttributeValue('role');
+        const clientID = this.ExtractClientName(ctx.clientIdentity.getID());
 
         if (clientMSPID === policy.InsuranceCompany &&
            (clientID    === policy.ClientID ||
-            authRoles.includes(role))) {
+            await this.IsAuthorizedToReadAll(ctx))) {
+            return true;
+        }
+        return false;
+    }
+
+    /*
+    * Checks whether given client is authorized to read all the policies and claims.
+    * 
+    * @return True if authorized, false otherwise.
+    */
+    async IsAuthorizedToReadAll(ctx) {
+        const authRoles = ['worker', 'manager', 'adjuster', 'bookkeeper', 'reader'];
+        const role = ctx.clientIdentity.getAttributeValue('role');
+
+        if(authRoles.includes(role)) {
             return true;
         }
         return false;
@@ -404,6 +406,132 @@ class CarInsurance extends Contract {
         }
 
         return true;
+    }
+
+    /*
+    * Returns all the policies objects stored in the private collection.
+    * 
+    * @return Array of policies.
+    */
+    async GetAllPolicies(ctx) {
+        if(!(await this.IsAuthorizedToReadAll(ctx))) {
+            throw new Error(`Client is not authorized to read the policies`);
+        }
+
+        const query = {
+            selector: {
+                InsuranceCompany: ctx.clientIdentity.getMSPID()
+            },
+            use_index: ["indexClientID"]
+        };
+		const resultsIterator = await ctx.stub.getPrivateDataQueryResult("policies", JSON.stringify(query));
+		return (await this.GetAllResults(resultsIterator, false)).map(result => result.Record);
+	}
+
+    /*
+    * Returns all the claims objects stored in the private collection.
+    * 
+    * @return Array of claims.
+    */
+    async GetAllClaims(ctx) {
+        const policies = await this.GetAllPolicies(ctx);
+        return policies.map(policy => policy.Claims).reduce((acc, cur) => [...acc, ...cur], []);
+	}
+
+    /*
+    * Returns all the policies objects stored in the private collection for a given clientId
+    * 
+    * @param clientId     ID of the client.
+    * @return Array of policies.
+    */
+    async GetAllPoliciesForClient(ctx, clientId) {
+        const clientID = this.ExtractClientName(ctx.clientIdentity.getID());
+		
+        if(!(await this.IsAuthorizedToReadAll(ctx)) && clientID !== clientId) {
+            throw new Error(`Client is not authorized to read the policies`);
+        }       
+        
+        const query = {
+            selector: {
+                ClientID: clientId,
+                InsuranceCompany: ctx.clientIdentity.getMSPID()
+            },
+            use_index: ["indexClientID"]
+        };
+        const resultsIterator = await ctx.stub.getPrivateDataQueryResult("policies", JSON.stringify(query));
+		return (await this.GetAllResults(resultsIterator, false)).map(result => result.Record);
+	}
+
+    /*
+    * Returns all the claims objects stored in the private collection for a given clientId
+    * 
+    * @param clientId     ID of the client.
+    * @return Array of policies.
+    */
+    async GetAllClaimsForClient(ctx, clientId) {
+        const policies = await this.GetAllPoliciesForClient(ctx, clientId);
+        return policies.map(policy => policy.Claims).reduce((acc, cur) => [...acc, ...cur], []);
+	}
+
+    /*
+    * Auxiliary function that eeturns the query results based on the iterator.
+    * 
+    * @param iterator     Iterator.
+    * @param isHistory    If true, shows changes to the object over time.
+    * @return Query results.
+    */
+    async GetAllResults(iterator, isHistory) {
+		const allResults = [];
+        iterator = iterator.iterator;
+		let res;
+		do {
+            res = await iterator.next();
+			if (res.value && res.value.value.toString()) {
+				let jsonRes = {};
+				if (isHistory && isHistory === true) {
+					jsonRes.TxId = res.value.tx_id;
+					jsonRes.Timestamp = res.value.timestamp;
+					try {
+						jsonRes.Value = JSON.parse(res.value.value.toString('utf8'));
+					} catch (err) {
+						console.log(err);
+						jsonRes.Value = res.value.value.toString('utf8');
+					}
+				} else {
+					jsonRes.Key = res.value.key;
+					try {
+						jsonRes.Record = JSON.parse(res.value.value.toString('utf8'));
+					} catch (err) {
+						console.log(err);
+						jsonRes.Record = res.value.value.toString('utf8');
+					}
+				}
+				allResults.push(jsonRes);
+			}
+		} while(!res.done)
+		iterator.close();
+		return allResults;
+	}
+
+    /*
+    * Calculates hash of a given policy.
+    * 
+    * @param policy     Policy object.
+    * @return Hash of the policy.
+    */
+    CalculatePolicyHash(policy) {
+        policy.Claims = [];
+        return crypto.createHash('sha256').update(Buffer.from(JSON.stringify(policy))).digest('hex');
+    }
+
+    /*
+    * Extracts client name from client ID
+    * 
+    * @param clientId   Client ID.
+    * @return Client name.
+    */
+    ExtractClientName(clientId) {
+        return clientId.match(/(?<=CN=)\w+/)[0];
     }
 }
 

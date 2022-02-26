@@ -1,7 +1,8 @@
 {
     "index": {
         "fields": [
-            "PolicyNo"
+            "PolicyNo",
+            "InsuranceCompany"
         ]
     },
     "name": "indexPolicyNo",

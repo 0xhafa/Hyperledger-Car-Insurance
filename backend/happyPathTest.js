@@ -95,6 +95,17 @@ const main = async () => {
     console.log(claims2);
     console.log(metadata2);
     console.log(hash2);
+
+    const allPolicies = await reader.getAllPolicies();
+    console.log(allPolicies);
+    const allClaims = await worker.getAllClaims();
+    console.log(allClaims);
+
+    const allPoliciesForCustomer1 = await customer1.getAllPoliciesForClient(identities[0].userId);
+    const allClaimsForCustomer1 = await manager.getAllClaimsForClient(identities[0].userId);
+    console.log(allPoliciesForCustomer1);
+    console.log(allClaimsForCustomer1);
+
     process.exit(0);
 }
 
