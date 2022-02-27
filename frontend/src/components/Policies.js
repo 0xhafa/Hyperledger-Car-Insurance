@@ -18,63 +18,10 @@ const Policy = (props) => {
   const [claimPolicy, setClaimPolicy] = useState(0);
   const [claimDescription, setClaimDescription] = useState("");
 
-  const testPolicies = [{
-    State: 'PENDING',
-    StartDate: '0',
-    EndDate: '0',
-    MainDriver: {
-        FirstName: 'Teste', 
-        LastName: 'da Silva', 
-        Address: '123 Street', 
-        DriversLicenseNo: '0000000-0'
-    },
-    Car: {
-        Make: 'Fiat',
-        Model: 'Marea',
-        Year: '1998',
-        LicensePlate: 'XYZX-000'
-    },
-    Coverage: {
-        BodilyInjuryLiability:    {Name:"Bodily Injury", Active: true,  CoveredAmount: 9000, ClaimedToDate: 0},
-        PropertyDamageLiability:  {Name:"Property Damage", Active: true,  CoveredAmount: 15000, ClaimedToDate: 0},
-        Collision:                {Name:"Collision", Active: false, CoveredAmount: 0, ClaimedToDate: 0},
-        Comprehensive:            {Name:"Comprehensive", Active: false, CoveredAmount: 0, ClaimedToDate: 0},
-        PersonalInjuryProtection: {Name:"Personal Injury", Active: false, CoveredAmount: 0, ClaimedToDate: 0},
-        UnderinsuredMotorist:     {Name:"Underinsured Motorist", Active: false, CoveredAmount: 0, ClaimedToDate: 0}
-    }
-  },
-  {
-    State: 'ACTIVE',
-    StartDate: '0',
-    EndDate: '0',
-    MainDriver: {
-        FirstName: 'Teste', 
-        LastName: 'da Silva', 
-        Address: '123 Street', 
-        DriversLicenseNo: '0000000-0'
-    },
-    Car: {
-        Make: 'Fiat',
-        Model: 'Marea',
-        Year: '1998',
-        LicensePlate: 'XYZX-000'
-    },
-    Coverage: {
-        BodilyInjuryLiability:    {Name:"Bodily Injury", Active: true,  CoveredAmount: 9000, ClaimedToDate: 0},
-        PropertyDamageLiability:  {Name:"Property Damage", Active: true,  CoveredAmount: 15000, ClaimedToDate: 0},
-        Collision:                {Name:"Collision", Active: true, CoveredAmount: 99999, ClaimedToDate: 0},
-        Comprehensive:            {Name:"Comprehensive", Active: false, CoveredAmount: 0, ClaimedToDate: 0},
-        PersonalInjuryProtection: {Name:"Personal Injury", Active: false, CoveredAmount: 0, ClaimedToDate: 0},
-        UnderinsuredMotorist:     {Name:"Underinsured Motorist", Active: false, CoveredAmount: 0, ClaimedToDate: 0}
-    }
-  }]
-
   useEffect(() => {
-
-    setPolicies(testPolicies);
-    console.log(props.user)
-    //Axios.get(`${url}/allPoliciesUser`, props.user)
-  },[])
+    getPolicies();
+    //eslint-disable-next-line react-hooks/exhaustive-deps 
+  },[props.user])
 
   function selectStatus(State){
     switch(State){
@@ -86,6 +33,8 @@ const Policy = (props) => {
         return "Expired 🔴";
       case "SUSPENDED":
         return "Suspended 🟡";
+      default:
+        return "Not Found"
     }
   }
 
@@ -102,41 +51,60 @@ const Policy = (props) => {
     setClaimForm(true);
   }
 
+  function getPolicies() {
+    if(props.user === "customer1" || props.user === "customer2"){
+      Axios.get(`${url}/allPoliciesUser?userId=${props.user}&id=${props.user}`)
+      .then((res)=>{
+        setPolicies(res.data)
+        console.log("POLICY UPDATED: ", res.data)
+      })
+    } else {
+      Axios.get(`${url}/allPolicies?userId=${props.user}`)
+      .then((res)=>{
+        setPolicies(res.data)
+        console.log("POLICY UPDATED: ", res.data)
+      })
+    }
+  }
+
   function addClaim() {
+    Axios.post(`${url}/addClaim`, {userId:props.user, policyNo:policies[claimPolicy].PolicyNo, claimDescription: claimDescription})
+    .then((res) => {
+      getPolicies()
+      console.log("CLAIM ADDED")
+    })
     setClaimForm(false);
     setClaimDescription("");
-    //Axios.get(`${url}/activatePolicy`, [userId, policyId, claimDescription])
-    // .then(setPolicies(res.data))
   }
 
   function activatePolicy(i) {
-    let policies_ = [...policies];
-    policies_[i].State = "ACTIVE";
-    setPolicies(policies_);
-    //Axios.get(`${url}/activatePolicy`, policyId)
-    // .then(setPolicies(res.data))
+    Axios.get(`${url}/activatePolicy?userId=${props.user}&policyNo=${policies[i].PolicyNo}`)
+    .then((res) => {
+      getPolicies()
+      console.log("POLICY UPDATED: ", policies[i])
+    })
   }
 
   function suspendPolicy(i) {
-    let policies_ = [...policies];
-    policies_[i].State = "SUSPENDED";
-    setPolicies(policies_);
-    //Axios.get(`${url}/suspendPolicy`, policyId)
-    // .then(setPolicies(res.data))
+    Axios.get(`${url}/suspendPolicy?userId=${props.user}&policyNo=${policies[i].PolicyNo}`)
+    .then((res) => {
+      getPolicies()
+      console.log("POLICY UPDATED: ", policies[i])
+    })
   }
   
   function expirePolicy(i) {
-    let policies_ = [...policies];
-    policies_[i].State = "EXPIRED";
-    setPolicies(policies_);
-    //Axios.get(`${url}/expirePolicy`, policyId)
-    // .then(setPolicies(res.data))
+    Axios.get(`${url}/expirePolicy?userId=${props.user}&policyNo=${policies[i].PolicyNo}`)
+    .then((res) => {
+      getPolicies()
+      console.log("POLICY UPDATED: ", policies[i])
+    })
   }
 
 
   return (
     <div className='containerReact'>
-      <div className="w-75 mt-4 mb-4" bg="light">
+      <div bg="light">
         <h1>Policies</h1>
         <Modal show={claimForm} onHide={closeClaim}>
           <Modal.Header closeButton>
@@ -161,10 +129,10 @@ const Policy = (props) => {
           </Button>
           </Modal.Footer>
         </Modal>
-      <div className="w-75 mt-4 mb-4" bg="light">
+      <div bg="light">
           {policies.length === 0 ? 
-          "" : 
-          <Row xs={1} md={1} xl={2} className="g-3">
+          "No Policies to Display" : 
+          <Row xs="auto" className="g-3">
             {policies.map((policy, i) => (
               <Col key={i}>
               <Card bg="light" className="h-100">
@@ -183,8 +151,12 @@ const Policy = (props) => {
                 <Card.Body id={i}>
                   <Card.Text id={i}>
                     <ListGroup>
-                      {Object.values(policy.Coverage).map((cover) => (
-                        <ListGroup.Item className="d-flex">{`${cover.Active? '✅': '❌'} ${cover.Name} ${cover.CoveredAmount === 0 ? "" : `$ ${cover.CoveredAmount}`}`}</ListGroup.Item>
+                      {Object.keys(policy.Coverage).map((type) => (
+                        <ListGroup.Item className="d-flex">
+                          {`${policy.Coverage[type].Active? '✅': '❌'} 
+                          ${type.replace(/([a-z])([A-Z])/g, "$1 $2")}
+                          ${policy.Coverage[type].CoveredAmount === 0 ? "" : `$${policy.Coverage[type].CoveredAmount}`}`}
+                        </ListGroup.Item>
                       ))}
                     </ListGroup>
                   </Card.Text>
@@ -194,13 +166,13 @@ const Policy = (props) => {
                 </Card.Body>
 
                   </OverlayTrigger>
-                  <Card.Footer className="mt-auto" style={{ display: "flex" }}>
+                  <Card.Footer className="mt-auto" style={{ display: "flex", height: "3rem" }}>
                   <div className="col text-center">
                       {(props.user === "customer1" || props.user === "customer2")
                         && policy.State === "ACTIVE" ?
                         
                       <Button variant="primary"
-                        className="w-25"
+                        className="w-35"
                         size="sm"
                         style={{ marginLeft: "auto" }}
                         onClick={(e) => {openClaim(i)}}>

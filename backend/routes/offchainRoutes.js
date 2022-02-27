@@ -76,6 +76,7 @@ router.post('/getOffers', function(req, res) {
       default:
         break;
     }
+
     offers.push(policy);
   }
   res.status(200).json(offers);

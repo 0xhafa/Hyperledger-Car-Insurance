@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import Offers from './Offers';
 import QuoteForm from './QuoteForm';
 import Axios from 'axios';
@@ -11,7 +11,7 @@ const Quotes = (props) => {
 
   function selectOffer(event) {
     const offerId = event.target.id
-    let index = offers.findIndex(offer => offer.offerId == offerId);
+    let index = offers.findIndex(offer => offer.offerId === offerId);
     let offers_ = [...offers];
     offers_[index].selected = true;
     setOffers(offers_);
@@ -24,7 +24,7 @@ const Quotes = (props) => {
   return (
     <div>
       <QuoteForm user = {props.user} setOffers={setOffers}/>
-      { props.user == "customer1" || props.user == "customer2"  ? <Offers policyNo={policyNo} offers={offers} selectOffer={selectOffer}/> : ""}
+      { props.user === "customer1" || props.user === "customer2"  ? <Offers policyNo={policyNo} offers={offers} setOffers={setOffers} selectOffer={selectOffer}/> : ""}
     </div>
   );
 };

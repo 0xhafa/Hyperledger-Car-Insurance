@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -13,36 +13,45 @@ import Axios from 'axios';
 export default function Offers(props) {
   const url = React.useContext(urlContext);
 
-  function pay(){
+  useEffect(()=>{
+    console.log("OFFERS RECEIVED: ", props.offers)
+  },[props.offers])
+
+  function pay(i){
     console.log(props.policyNo)
     Axios.get(`${url}/makePayment?policyNo=${props.policyNo}`)
     .then((res)=>{
-      console.log(res.data)
-      //if SUCESS hide pay
-      //Map offer 
+      if(res.data === "SUCCESS"){
+        let offers_ = [...props.offers];
+        offers_[i].paid = true;
+        props.setOffers(offers_);
+      } 
+      console.log(props.offers);
     });
   }
 
   return (
     <div className='containerReact'>
-      <div className="w-75 mt-4 mb-4" bg="light">
-        <h1>Offers</h1>
-        <div className="w-75 mt-4 mb-4" bg="light">
+      <div className="mt-4" bg="light">
+        
+        <div bg="light">
           {props.offers.length === 0 ? 
           "" : 
-          <Row xs={1} md={2} className="g-4">
+          <>
+          <h1>Offers</h1>
+          <Row xs="auto" >
             {props.offers.map((offer, i) => (
               <Col key={i}>
               {!offer.selected && props.offers.some(offer => offer.selected) ? "" :
               <Card bg="light" className="h-100">
               <Card.Header>
-                {`Option ${offer.offerId}`}
+                {`Offer ID: ${offer.offerId}`}
               </Card.Header>
                 <OverlayTrigger trigger="click" placement="top" overlay={
                   <Popover id="popover-basic">
                     <Popover.Header as="h3">Offer Details</Popover.Header>
                     <Popover.Body>
-                      {offer.offer_details}
+                      This is a mock up offer, there's no details.
                     </Popover.Body>
                   </Popover>
                 }>                                        
@@ -54,7 +63,7 @@ export default function Offers(props) {
                         <ListGroup.Item className="d-flex">
                           {`${offer.Coverage[type].Active? '✅': '❌'} 
                           ${type.replace(/([a-z])([A-Z])/g, "$1 $2")}
-                          ${offer.Coverage[type].CoveredAmount == 0 ? "" : `$${offer.Coverage[type].CoveredAmount}`}`}
+                          ${offer.Coverage[type].CoveredAmount === 0 ? "" : `$${offer.Coverage[type].CoveredAmount}`}`}
                         </ListGroup.Item>
                       ))}
                     </ListGroup>
@@ -65,18 +74,24 @@ export default function Offers(props) {
                 </Card.Body>
                   
                 </OverlayTrigger>
-                <Card.Footer className="mt-auto" style={{ display: "flex" }}>
-                  <h3>{`Price: $ ${offer.price}`}</h3>
-                  {offer.selected ?
+                <Card.Footer className="mt-auto" style={{ display: "flex", height: "3rem" }}>
+                  <b>{`Price: $ ${offer.price}`}</b>
+                  {offer.selected && !offer.paid ?
                   <Button
-                    variant="outline-dark" 
+                    variant="outline-dark"
+                    className="w-25"
+                    size="sm"
                     id={offer.offerId}
                     style={{ marginLeft: "auto" }}
-                    onClick={(e) => {pay()}}>
+                    onClick={(e) => {pay(i)}}>
                     Pay
                   </Button> :
+                  offer.selected && offer.paid ?
+                  "" :
                   <Button
                     id={offer.offerId}
+                    className="w-25"
+                    size="sm"
                     style={{ marginLeft: "auto" }}
                     onClick={(e) => {props.selectOffer(e)}}>
                     Accept
@@ -86,10 +101,12 @@ export default function Offers(props) {
               </Card>}
               </Col>
             ))}
-          </Row>}
+          </Row>
+          </>}
         </div>
       </div>
     </div>
+    
   )
 }
 

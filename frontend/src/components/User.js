@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import Form from 'react-bootstrap/Form'
 
 export default function User() {
     const [user, setUser] = useState("Customer 1")
 
     const handleUser = (e) => {
+        /////////////////TRIGGER GETPOLICIES
         setUser(e.target.value); 
     }
 
