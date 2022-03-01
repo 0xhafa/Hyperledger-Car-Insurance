@@ -1,5 +1,5 @@
 # Hyperledger Car Insurance
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/InsuranceLogo.png" width="500">
+<img src="./frontend/src/img/InsuranceLogo.png" width="500">
 
 This project showcases the use of blockchain for insurance companies. Rasper Car Insurance network is a basic Hyperledger Fabric-based application to connect insurance companies, customers, and authorities in order to create, read and update insurance contracts and add and payout claims. 
 This project aimed to set up a basic Hyperledger Fabric use case and test out Chaincode interactions.
@@ -83,21 +83,7 @@ $ sudo usermod -a -G docker <username>
 - **Nodejs** (https://www.nodejs.org/) is an open-source, cross-platform JavaScript run-time environment that executes JavaScript code server-side.
 - **Docker** (https://www.docker.com/) is a computer program that performs operating-system-level virtualization, also known as Containerization.
 
-<<<<<<< HEAD
-More info:
-- Docker - latest
-- Docker Compose - latest
-- NPM - latest
-- nvm - latest
-- Node.js - v14.17
-- HyperLedger Read the Docs
-- HyperLedger Test Network
-
-You could use your local docker containers or create a cloud account in IBM Cloud, Azure, AWS or Google Cloud Platform.
-
-=======
 You can use your local docker containers or create a cloud account at IBM Cloud, Azure, AWS or Google Cloud Platform.
->>>>>>> 2d0a02ce66fffed393cb12fbebe9d88a229f4bdf
 
 
 # Architecture
@@ -238,29 +224,29 @@ cd network
 
 ## User Interface
 Select user profile: 
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/1-UserTypeSelect.png">
+<img src="./frontend/src/img/screenshots/1-UserTypeSelect.png">
 With "Customer" profile selected, fill out the quote form:
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/2-QuoteForm.png">
+<img src="./frontend/src/img/screenshots/2-QuoteForm.png">
 After quote submission, different offers appear: 
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/3-SelectOffer.png">
+<img src="./frontend/src/img/screenshots/3-SelectOffer.png">
 Select one of the offers and click "pay":
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/4-PayOffer.png">
+<img src="./frontend/src/img/screenshots/4-PayOffer.png">
 In the Policies tab, Select "Insurance Manager" and activate the selected policy:
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/5-ActivatePolicy.png">
+<img src="./frontend/src/img/screenshots/5-ActivatePolicy.png">
 With "Customer" profile selected, click add claim: 
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/6-AddClaim.png">
+<img src="./frontend/src/img/screenshots/6-AddClaim.png">
 Fill the claim form with info about the incident:
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/6-ClaimForm.png">
+<img src="./frontend/src/img/screenshots/6-ClaimForm.png">
 "Insurance Worker" and "Insurance Manager" have access to expire or suspend the policy:
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/7-SuspendExpire.png">
+<img src="./frontend/src/img/screenshots/7-SuspendExpire.png">
 In the Claim tab, with "Insurance Adjuster" selected you can approve or decline the claim: 
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/8-ApproveDeclineClaim.png">
+<img src="./frontend/src/img/screenshots/8-ApproveDeclineClaim.png">
 To approve, fill the approved amounts:
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/9-ApprovedAmounts.png">
+<img src="./frontend/src/img/screenshots/9-ApprovedAmounts.png">
 If the claim was approved, select "Insurance Bookkeeper" profile and pay out the claim: 
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/10-PayoutClaim.png">
+<img src="./frontend/src/img/screenshots/10-PayoutClaim.png">
 The claim now appears with "Paid" status:
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/11-PaidClaim.png">
+<img src="./frontend/src/img/screenshots/11-PaidClaim.png">
 <br />
 
 
