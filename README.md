@@ -158,7 +158,7 @@ Policy:
     ],
     "State": "" 
 }
-}
+
 ```
 Default Coverage:
 ```json
