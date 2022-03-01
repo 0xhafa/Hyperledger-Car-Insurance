@@ -129,23 +129,22 @@ Insurance data (policies and claims) is stored in a private collection. Only the
 
 Policy:
 ```json
-// Policy
 {
-    "Timestamp": '',
-    "PolicyNo": '',
-    "ClientID": '',
-    "InsuranceCompany": '',
-    "StartDate": '',
-    "EndDate": '',
+    "Timestamp": "",
+    "PolicyNo": "",
+    "ClientID": "",
+    "InsuranceCompany": "",
+    "StartDate": "",
+    "EndDate": "",
     "MainDriver": {
-        "FirstName": '', 
-        "LastName": '', 
-        "DriversLicenseNo": ''
+        "FirstName": "", 
+        "LastName": "", 
+        "DriversLicenseNo": ""
     },
     "Car": {
-        "Model": '',
-        "Year": '',
-        "LicensePlate": ''
+        "Model": "",
+        "Year": "",
+        "LicensePlate": ""
     },
     "Coverage": {
         "BodilyInjuryLiability":    defaultCoverage,
@@ -157,28 +156,26 @@ Policy:
     "Claims": [
         defaultClaim
     ],
-    "State": '' 
+    "State": "" 
 }
 }
 ```
 Default Coverage:
 ```json
-// defaultCoverage
 {
   "Active": false,  
   "CoveredAmount": 0, 
   "ClaimedToDate": 0
 }
 ```
-Default Claim:
+Claim:
 ```json
-// defaultClaim
 {
-  "Timestamp": '',  
-  "PolicyNo": '',
-  "ClaimNo": '',
-  "Description": '', 
-  "State": ''
+  "Timestamp": "",  
+  "PolicyNo": "",
+  "ClaimNo": "",
+  "Description": "", 
+  "State": ""
 }
 ```
 <br />
