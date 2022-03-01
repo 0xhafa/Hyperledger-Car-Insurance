@@ -3,10 +3,9 @@
 # install backend dependencies
 cd ./backend
 BACKEND_URL=$(cat .env | grep '(?<=BACKEND_URL=).*$' -Po)
+mkdir -p ./storage
 npm install
-cd ..
-
-cd ./network
+cd ../network
 
 # create a network with a channel and couch DB instance
 ./network.sh down
@@ -62,9 +61,10 @@ peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride o
 # query if chaincode commited - optional
 peer lifecycle chaincode querycommitted --channelID insurancechannel --name insurance --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
 
-# resolve backend url dependency for the frontend
+# install frontend dependencies, resolve backend url dependency
 cd ../frontend
 echo "{\"url\":\"$BACKEND_URL\"}" > ./src/backend.json
+npm install
 
 # remove previously created identities and create new ones
 cd ../backend
