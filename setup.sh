@@ -73,19 +73,3 @@ node registerAndEnroll.js
 
 echo "Starting backend server..."
 npm start
-
-#export PATH=${PWD}/../bin:${PWD}:$PATH
-#export FABRIC_CFG_PATH=$PWD/../config/
-#export FABRIC_CA_CLIENT_HOME=${PWD}/organizations/peerOrganizations/InsuranceCompany1.example.com/
-#fabric-ca-client register --caname ca-InsuranceCompany1 --id.name kasper --id.secret kasperpw --id.type client --id.attrs role=customer:ecert --tls.certfiles "${PWD}/organizations/fabric-ca/InsuranceCompany1/tls-cert.pem"
-#fabric-ca-client enroll -u https://kasper:kasperpw@localhost:7054 --caname ca-InsuranceCompany1 -M "${PWD}/organizations/peerOrganizations/InsuranceCompany1.example.com/users/kasper@InsuranceCompany1.example.com/msp" --tls.certfiles "${PWD}/organizations/fabric-ca/InsuranceCompany1/tls-cert.pem"
-#cp "${PWD}/organizations/peerOrganizations/InsuranceCompany1.example.com/msp/config.yaml" "${PWD}/organizations/peerOrganizations/InsuranceCompany1.example.com/users/kasper@InsuranceCompany1.example.com/msp/config.yaml"
-#
-#export CORE_PEER_TLS_ENABLED=true
-#export CORE_PEER_LOCALMSPID="InsuranceCompany1"
-#export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/peerOrganizations/InsuranceCompany1.example.com/peers/peer0.InsuranceCompany1.example.com/tls/ca.crt
-#export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/InsuranceCompany1.example.com/users/kasper@InsuranceCompany1.example.com/msp
-#export CORE_PEER_ADDRESS=localhost:7051
-#
-#export POLICY=$(echo -n "{\"color\":\"blue\",\"size\":30,\"appraisedValue\":100}" | base64 | tr -d \\n)
-#peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" -C insurancechannel -n insurance --peerAddresses localhost:7051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/InsuranceCompany1.example.com/peers/peer0.InsuranceCompany1.example.com/tls/ca.crt" -c '{"function":"SubmitPolicy","Args":[]}' --transient "{\"policy\":\"$POLICY\"}"
