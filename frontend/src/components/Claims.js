@@ -239,7 +239,7 @@ const Claim = (props) => {
     <div bg="light">
           {claims.length === 0 ? 
           "No Claims to Display" : 
-          <Row xs={1} md={1} xl={3} className="g-3">
+          <Row xs={1}>
             {claims.map((claim, i) => (
               <Col key={i}>
               <Card bg="light" className="h-100">

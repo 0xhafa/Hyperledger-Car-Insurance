@@ -5,6 +5,7 @@ import {useState, useEffect} from 'react';
 import Navbar from './components/Navbar';
 import Policies from './components/Policies';
 import Quotes from './components/Quotes';
+import Home from './components/Home';
 import Claims from './components/Claims';
 import Form from 'react-bootstrap/Form'
 import {
@@ -38,6 +39,7 @@ function App() {
         <Navbar />
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<Home />} />
             <Route path="quotes" element={<Quotes user={user}/>} />
             <Route path="policies" element={<Policies user={user}/>} />
             <Route path="claims" element={<Claims user={user}/>} />
