@@ -97,17 +97,23 @@ Authority | read all customers policies and claims.
 
 <br />
 
-## Functions
-Profile  | Actions | Roles
+## Endpoints
+Endpoint  | Actions | Roles
 ------------- | ------------- | -------------
-getOffers | Offchain process, ask for offers when quote is submmited. | All.  Customers can get only their polcies and claims
-submitPolicy | Add selected offer to blockchain. | Customer
-activatePolicy | Changes policy state to ACTIVE. | Insurance Manager
-suspendPolicy | Changes policy state to SUSPENDED. | Insurance Manager and Worker
-expirePolicy | Changes policy state to EXPIRED. | Insurance Manager and Worker
-addClaim | Add claim to policy in the blockchain. | Customer
-reviewClaim | Changes claim state to DECLINED or ACCEPTED. | Insurance Adjuster
-payoutClaim | Changes claim state to PAID_OUT. | Insurance Bookkeeper
+getOffers | Offchain: Ask for offers when quote is submmited (for this test case it always returns 3 mock up offers) | All.  Customers can get only their polcies and claims
+makePayment | Offchain: Add policy number to paid list (only a simulation of payment process) | Customers
+isPaid | Offchain: Check if policy number is registered in paid list | Customers
+submitPolicy | Add selected offer to blockchain | Customer
+activatePolicy | Changes policy state to ACTIVE | Insurance Manager
+suspendPolicy | Changes policy state to SUSPENDED | Insurance Manager and Worker
+expirePolicy | Changes policy state to EXPIRED | Insurance Manager and Worker
+addClaim | Add claim to policy in the blockchain | Customer
+reviewClaim | Changes claim state to DECLINED or ACCEPTED | Insurance Adjuster
+payoutClaim | Changes claim state to PAID_OUT | Insurance Bookkeeper
+allPolicies | Get All registered policies | Insurance Manager, Worker, Adjuster, Bookkeeper and Authorities
+allPoliciesUser | Get all policies for a specific userId | Customers
+allClaims | Get All registered claims | Insurance Manager, Worker, Adjuster, Bookkeeper and Authorities
+allClaimsUser | Get all claims for a specific userId | Customers
 <br />
 
 ## State Diagram
