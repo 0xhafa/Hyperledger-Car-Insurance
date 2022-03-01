@@ -1,5 +1,5 @@
 # Hyperledger Car Insurance
-<img src="./frontend/src/img/InsuranceLogo.png" width="500">
+<img src="./frontend/src/img/InsuranceLogo.png" width="650">
 
 This project showcases the use of blockchain for insurance companies. Rasper Car Insurance network is a basic Hyperledger Fabric-based application to connect insurance companies, customers, and authorities in order to create, read and update insurance contracts and add and payout claims. 
 This project aimed to set up a basic Hyperledger Fabric use case and test out Chaincode interactions.
