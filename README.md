@@ -35,11 +35,11 @@ The main stakeholders affected by this solution are the insurance companies, ins
 
 # Requirements
 ## Prerequisites
-The following prerequisites are required to run a Docker-based Fabric test network on your local machine.
+The following prerequisites are required to run a Docker-based Fabric network on your local machine.
 ```
 # Update your Linux system
-$ apt-get update
-$ apt-get upgrade
+$ sudo apt-get update
+$ sudo apt-get upgrade
 
 # Install the latest version of git if it is not already installed.
 $ sudo apt-get install git
@@ -47,18 +47,22 @@ $ sudo apt-get install git
 # Install the latest version of cURL if it is not already installed.
 $ sudo apt-get install curl
 
-# Optional: Install the latest version of jq if it is not already installed (only required for the tutorials related to channel configuration transactions).
-$ sudo apt-get install jq
-
-# Install Node JS
-$ sudo apt-get install nodejs
-$ npm
+# Install Node JS and development tools
+$ curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+$ sudo apt-get install -y nodejs
+$ sudo apt install -y build-essential
 ```
 
-## Setting up Docker
+## Setting up Docker & Docker Compose
 ```
-# Install the latest version of Docker if it is not already installed.
-$ sudo apt-get -y install docker-compose
+# Install latest version of Docker if it is not already installed.
+$ sudo apt update
+$ sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+$ apt-cache policy docker-ce
+$ sudo apt install -y docker-ce
+$ sudo systemctl status docker
 
 # Make sure the Docker daemon is running.
 $ sudo systemctl start docker
@@ -66,56 +70,20 @@ $ sudo systemctl start docker
 # Optional: If you want the Docker daemon to start when the system starts, use the following:
 $ sudo systemctl enable docker
 
-#Add your user to the Docker group.
+# Install version 1.28.5 of Docker compose
+$ sudo curl -L https://github.com/docker/compose/releases/download/1.28.5/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+$ sudo chmod +x /usr/local/bin/docker-compose
+
+# Add your user to the Docker group.
 $ sudo usermod -a -G docker <username>
-
-$ sudo groupadd docker
-$ sudo usermod -aG docker alexandrebarros $USER
-
-$ newgrp docker
-$ docker run hello-world
-$ docker ps
-$ docker ps -a
-$ docker images
-$ docker logs --tail 20 [processIdNumber]
-$ docker restart
-
-# Reboot if still got error
-$ reboot
 ```
-## Install Fabric SDK for NodeJS
-The Hyperledger Fabric SDK allows applications to interact with a Fabric blockchain network. It provides a simple API to submit transactions to a ledger or query the contents of a ledger with minimal code.
-The client API is published to the npm registry in the fabric-network package.
-```
-npm install fabric-network
-```
-## Install Docker Images, Fabric Tools and Fabric Samples
-Clone from Github Hyperledger Fabric Samples.
-1. Run Docker on your machine
-2. Create a project folder and cd into it
-```
-mkdir new-network
-cd new-network
-```
-3. Run script:
-```
-curl -sSL https://bit.ly/2ysbOFE | bash -s -- 2.2.2 1.4.9
-
-# sudo curl -sSL https://goo.gl/6wtTN5 | sudo bash -s 1.1.0
-# curl -sSL https://raw.githubusercontent.com/hyperledger/fabric/master/scripts/bootstrap.sh | bash -s 1.1.0
-# sudo chmod 777 -R fabric-samples
-```
-
-Now you'll have:
-- Fabric-samples downloaded
-- Binary tools installed in /bin
-- Docker Images downloaded
 
 ## Featured Tech
 - **Hyperledger Fabric** (https://www.hyperledger.org/use/fabric) is intended as a foundation for developing applications or solutions with a modular architecture. Its modular and versatile design satisfies a broad range of industry use cases.
 - **Nodejs** (https://www.nodejs.org/) is an open-source, cross-platform JavaScript run-time environment that executes JavaScript code server-side.
 - **Docker** (https://www.docker.com/) is a computer program that performs operating-system-level virtualization, also known as Containerization.
 
+<<<<<<< HEAD
 More info:
 - Docker - latest
 - Docker Compose - latest
@@ -127,6 +95,9 @@ More info:
 
 You could use your local docker containers or create a cloud account in IBM Cloud, Azure, AWS or Google Cloud Platform.
 
+=======
+You can use your local docker containers or create a cloud account at IBM Cloud, Azure, AWS or Google Cloud Platform.
+>>>>>>> 2d0a02ce66fffed393cb12fbebe9d88a229f4bdf
 
 
 # Architecture
@@ -228,21 +199,37 @@ Default Claim:
 
 
 ## Deploy & Run Application
-### Step 1. Start Hyperledger network, generate certificates and deploy the chaincode
-### Step 2. Install & Run Backend Server
-To execute both steps, in the root folder run the following command:
+### Step 1. Clone this repository and setup PATH variable
+```
+git clone https://github.com/kasperpawlowski/Hyperledger-Car-Insurance.git
+cd Hyperledger-Car-Insurance
+export PATH=$(pwd)/bin:$PATH
+```
+### Step 2. Setup environment variables
+- Rename ```.env.example``` file in the ```./backend``` directory to ```.env```
+- Change the BACKEND_URL variable setting your public IP number. Leave the port as 5986.
+### Step 3. Setup ports
+Make sure that ports 5984-5896 are accessible and not blocked by the firewall.
+- 5984 - couchDB database
+- 5985 - frontend app
+- 5986 - backend app
+### Step 4. Install the dependencies
+### Step 5. Start the Hyperledger network, deploy the chaincode and generate certificates for initial identities
+### Step 6. Run Backend Server
+To execute steps 4-6, in the root folder run the following command:
 ```
 ./setup.sh
 ```
-### Step 3. Install & Run Interface
+### Step 7. Run User Interface app
 In separate terminal, move to frontend folder and start the frontend locally:
 ```
-cd frontend/
-npm install
+cd Hyperledger-Car-Insurance/frontend/
 npm start
 ```
+### Step 8. Use the app
+Open the browser using the address provided in the .env file and port 5985. i.e. http://104.198.73.130:5985/
 ### Stop network
-To stop the network press ctrl+c in the terminal running backend server to stop it. Then run:
+To stop the network press `ctrl+c` in the terminal running backend server to stop it. Then run:
 ```
 cd network
 ./network.sh down
@@ -282,7 +269,6 @@ The claim now appears with "Paid" status:
 - Hyperledger Intro: https://hyperledger-fabric.readthedocs.io/en/latest/whatis.html
 - Hyperledger GitHub: https://github.com/hyperledger/fabric
 - Hyperledger Wiki: https://wiki.hyperledger.org/display/fabric
-- Hyperledger Explorer: https://github.com/hyperledger/blockchain-explorer
 - Using Private Data in Fabric: https://hyperledger-fabric.readthedocs.io/en/release-2.2/private_data_tutorial.html
-- Whiting your first Chaincode: https://hyperledger-fabric.readthedocs.io/en/release-2.2/chaincode4ade.html
+- Writing your first Chaincode: https://hyperledger-fabric.readthedocs.io/en/release-2.2/chaincode4ade.html
 - Private Data Collections on Hyperledger Fabric: https://github.com/IBM/private-data-collections-on-fabric
