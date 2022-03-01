@@ -115,8 +115,6 @@ payoutClaim | Changes claim state to PAID_OUT. | Insurance Bookkeeper
 ## State Diagram
 <img src="./frontend/src/img/Hyperledger-Insurance-State.png">
 <br />
-<br />
-<br />
 
 ## Complete Application Flowchart
 
