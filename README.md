@@ -1,5 +1,5 @@
 # Hyperledger Car Insurance
-<img src="./img/InsuranceLogo.png" width="500">
+<img src="./frontend/src/img/InsuranceLogo.png" width="500">
 
 This project showcases the use of blockchain for insurance companies. Rasper Car Insurance network is a basic Hyperledger Fabric-based application to connect insurance companies, customers, and authorities in order to create, read and update insurance contracts and add and payout claims. 
 This project aimed to set up a basic Hyperledger Fabric use case and test out Chaincode interactions.
@@ -10,6 +10,8 @@ Name  | GitHub
 ------------- | ------------- 
 Rafael Albuquerque | [@albuquerque-rafael](https://github.com/albuquerque-rafael) 
 Kasper Pawlowski |  [@kasperpawlowski](https://github.com/kasperpawlowski)
+
+Project Gantt Chart: https://docs.google.com/spreadsheets/d/1Azrs2l__uOtwhwyx1QeFw0hHLNr3ZQckCqy_ETUVKu8/
 
 # Business Case
 ## Problem Statement
@@ -25,6 +27,9 @@ The value of running this network using Hyperledger Fabric is that you can easil
 ## Goals
 The project's goal is to simulate the life flow of a vehicle insurance policy in a simplified way.
 The application enables the user to test its different functionalities using any profile. In this way, it is possible to submit quotes, select offers and pay, activate, suspend and expire policies, add claims, accept and pay claims.
+
+## Stakeholders
+The main stakeholders affected by this solution are the insurance companies, insurance customers and public authorities.
 
 <br />
 
@@ -122,43 +127,48 @@ More info:
 
 You could use your local docker containers or create a cloud account in IBM Cloud, Azure, AWS or Google Cloud Platform.
 
-## 
+
 
 # Architecture
-
 ## Roles
 Profile  | Actions
 ------------- | ------------- 
 Insurance Manager | Activate, suspend and expire polcies. 
 Insurance Worker | Suspend and expire polcies. 
-Adjuster | Approve or decline claims.
-Bookkeeper | Pay out claims.
+Insurance Adjuster | Approve or decline claims.
+Insurance Bookkeeper | Pay out claims.
 Customer | Quote and select offers, add claims to active policies.
 Authority | read all customers policies and claims.
 
 <br />
 
 ## Functions
-Profile  | Actions
-------------- | ------------- 
-getOffers | Offchain process, ask for offers when quote is submmited.
-submitPolicy | Add selected offer to blockchain.
-activatePolicy | Changes policy state to ACTIVE.
-suspendPolicy | Changes policy state to SUSPENDED.
-expirePolicy | Changes policy state to EXPIRED.
-addClaim | Add claim to policy in the blockchain.
-reviewClaim | Changes claim state to DECLINED or ACCEPTED.
-payoutClaim | Changes claim state to PAID_OUT.
+Profile  | Actions | Roles
+------------- | ------------- | -------------
+getOffers | Offchain process, ask for offers when quote is submmited. | All.  Customers can get only their polcies and claims
+submitPolicy | Add selected offer to blockchain. | Customer
+activatePolicy | Changes policy state to ACTIVE. | Insurance Manager
+suspendPolicy | Changes policy state to SUSPENDED. | Insurance Manager and Worker
+expirePolicy | Changes policy state to EXPIRED. | Insurance Manager and Worker
+addClaim | Add claim to policy in the blockchain. | Customer
+reviewClaim | Changes claim state to DECLINED or ACCEPTED. | Insurance Adjuster
+payoutClaim | Changes claim state to PAID_OUT. | Insurance Bookkeeper
 <br />
 
 ## State Diagram
+<img src="./frontend/src/img/Hyperledger-Insurance-State.png">
+<br />
+<br />
+<br />
 
-<img src="./img/Hyperlegder-Insurance-Flow.svg">
+## Complete Application Flowchart
+
+<img src="./frontend/src/img/Hyperledger-Insurance-Flow.svg">
 
 <br />
 
 ## Data
-The objects and properties.
+Insurance data (policies and claims) is stored in a private collection. Only the insurance company personnel and authorities may have access to this data. The public world state contains only the hash of the policy and its state. 
 
 Policy:
 ```json
@@ -227,32 +237,33 @@ To stop the network run:
 
 ## User Interface
 Select user profile: 
-<img src="./img/screenshots/1-UserTypeSelect.png">
+<img src="./frontend/src/img/screenshots/1-UserTypeSelect.png">
 With "Customer" profile selected, fill out the quote form:
-<img src="./img/screenshots/2-QuoteForm.png">
+<img src="./frontend/src/img/screenshots/2-QuoteForm.png">
 After quote submition, different offers appear: 
-<img src="./img/screenshots/3-SelectOffer.png">
+<img src="./frontend/src/img/screenshots/3-SelectOffer.png">
 Select one of the offers and click "pay":
-<img src="./img/screenshots/4-PayOffer.png">
+<img src="./frontend/src/img/screenshots/4-PayOffer.png">
 In the Policies tab, Select "Insurance Manager" and activate the selected policy:
-<img src="./img/screenshots/5-ActivatePolicy.png">
+<img src="./frontend/src/img/screenshots/5-ActivatePolicy.png">
 With "Customer" profile selected, click add claim: 
-<img src="./img/screenshots/6-AddClaim.png">
+<img src="./frontend/src/img/screenshots/6-AddClaim.png">
 Fill the claim form with info about the incident:
-<img src="./img/screenshots/6-ClaimForm.png">
+<img src="./frontend/src/img/screenshots/6-ClaimForm.png">
 "Insurance Worker" and "Insurance Manager" have access to expire or suspend the policy:
-<img src="./img/screenshots/7-SuspendExpire.png">
+<img src="./frontend/src/img/screenshots/7-SuspendExpire.png">
 In the Claim tab, with "Insurance Adjuster" selected you can approve or decline the claim: 
-<img src="./img/screenshots/8-ApproveDeclineClaim.png">
+<img src="./frontend/src/img/screenshots/8-ApproveDeclineClaim.png">
 To approve, fill the approved amounts:
-<img src="./img/screenshots/9-ApprovedAmounts.png">
+<img src="./frontend/src/img/screenshots/9-ApprovedAmounts.png">
 If the claim was approved, select "Insurance Bookkeeper" profile and pay out the claim: 
-<img src="./img/screenshots/10-PayoutClaim.png">
+<img src="./frontend/src/img/screenshots/10-PayoutClaim.png">
 The claim now appears with "Paid" status:
-<img src="./img/screenshots/11-PaidClaim.png">
+<img src="./frontend/src/img/screenshots/11-PaidClaim.png">
 <br />
 
-## Appendix
+
+# Appendix
 - Hyperledger Org: https://www.hyperledger.org/
 - Hyperledger Intro: https://hyperledger-fabric.readthedocs.io/en/latest/whatis.html
 - Hyperledger GitHub: https://github.com/hyperledger/fabric
