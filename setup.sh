@@ -62,11 +62,12 @@ peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride o
 # query if chaincode commited - optional
 peer lifecycle chaincode querycommitted --channelID insurancechannel --name insurance --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
 
-# resolve backend url dependency for the frontend
+# install frontend dependencies, resolve backend url dependency
 cd ../frontend
+npm install
 echo "{\"url\":\"$BACKEND_URL\"}" > ./src/backend.json
 
-# remove previously created identities and create new ones
+# remove previously created identities (if any) and create new ones
 cd ../backend
 rm -r ./wallet
 node registerAndEnroll.js
