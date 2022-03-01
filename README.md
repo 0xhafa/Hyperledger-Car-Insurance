@@ -203,7 +203,15 @@ cd Hyperledger-Car-Insurance/frontend/
 npm start
 ```
 ### Step 8. Use the app
-Open the browser using the address provided in the .env file and port 5985. i.e. http://104.198.73.130:5985/
+Open the browser using the address provided in the `.env` file and port 5985, i.e. http://34.136.154.88:5985/
+
+### CouchDB Interface
+If needed, the world state and the private data and be accessed and viewed using the CouchDB interface. Open the browser using the address provided in the `.env` file and port 5984, i.e. http://34.136.154.88:5984/
+```
+Username: admin
+Password: adminpw
+```
+
 ### Stop network
 To stop the network press `ctrl+c` in the terminal running backend server to stop it. Then run:
 ```
