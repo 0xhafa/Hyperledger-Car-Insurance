@@ -114,13 +114,10 @@ payoutClaim | Changes claim state to PAID_OUT. | Insurance Bookkeeper
 
 ## State Diagram
 <img src="./frontend/src/img/Hyperledger-Insurance-State.png">
-<br />
 
 ## Complete Application Flowchart
 
 <img src="./frontend/src/img/Hyperledger-Insurance-Flow.svg">
-
-<br />
 
 ## Data
 Insurance data (policies and claims) is stored in a private collection. Only the insurance company personnel and authorities may have access to this data. The public world state contains only the hash of the policy and its state. 
