@@ -1,5 +1,5 @@
 # Hyperledger Car Insurance
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/InsuranceLogo.png" width="500">
+<img src="./frontend/src/img/InsuranceLogo.png" width="650">
 
 This project showcases the use of blockchain for insurance companies. Rasper Car Insurance network is a basic Hyperledger Fabric-based application to connect insurance companies, customers, and authorities in order to create, read and update insurance contracts and add and payout claims. 
 This project aimed to set up a basic Hyperledger Fabric use case and test out Chaincode interactions.
@@ -10,6 +10,8 @@ Name  | GitHub
 ------------- | ------------- 
 Rafael Albuquerque | [@albuquerque-rafael](https://github.com/albuquerque-rafael) 
 Kasper Pawlowski |  [@kasperpawlowski](https://github.com/kasperpawlowski)
+
+Project Gantt Chart: https://docs.google.com/spreadsheets/d/1Azrs2l__uOtwhwyx1QeFw0hHLNr3ZQckCqy_ETUVKu8/
 
 # Business Case
 ## Problem Statement
@@ -26,15 +28,16 @@ The value of running this network using Hyperledger Fabric is that you can easil
 The project's goal is to simulate the life flow of a vehicle insurance policy in a simplified way.
 The application enables the user to test its different functionalities using any profile. In this way, it is possible to submit quotes, select offers and pay, activate, suspend and expire policies, add claims, accept and pay claims.
 
-<br />
+## Stakeholders
+The main stakeholders affected by this solution are the insurance companies, insurance customers and public authorities.
 
 # Requirements
 ## Prerequisites
-The following prerequisites are required to run a Docker-based Fabric test network on your local machine.
+The following prerequisites are required to run a Docker-based Fabric network on your local machine.
 ```
 # Update your Linux system
-$ apt-get update
-$ apt-get upgrade
+$ sudo apt-get update
+$ sudo apt-get upgrade
 
 # Install the latest version of git if it is not already installed.
 $ sudo apt-get install git
@@ -42,18 +45,22 @@ $ sudo apt-get install git
 # Install the latest version of cURL if it is not already installed.
 $ sudo apt-get install curl
 
-# Optional: Install the latest version of jq if it is not already installed (only required for the tutorials related to channel configuration transactions).
-$ sudo apt-get install jq
-
-# Install Node JS
-$ sudo apt-get install nodejs
-$ npm
+# Install Node JS and development tools
+$ curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+$ sudo apt-get install -y nodejs
+$ sudo apt install -y build-essential
 ```
 
-## Setting up Docker
+## Setting up Docker & Docker Compose
 ```
-# Install the latest version of Docker if it is not already installed.
-$ sudo apt-get -y install docker-compose
+# Install latest version of Docker if it is not already installed.
+$ sudo apt update
+$ sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+$ apt-cache policy docker-ce
+$ sudo apt install -y docker-ce
+$ sudo systemctl status docker
 
 # Make sure the Docker daemon is running.
 $ sudo systemctl start docker
@@ -61,124 +68,76 @@ $ sudo systemctl start docker
 # Optional: If you want the Docker daemon to start when the system starts, use the following:
 $ sudo systemctl enable docker
 
-#Add your user to the Docker group.
+# Install version 1.28.5 of Docker compose
+$ sudo curl -L https://github.com/docker/compose/releases/download/1.28.5/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+$ sudo chmod +x /usr/local/bin/docker-compose
+
+# Add your user to the Docker group.
 $ sudo usermod -a -G docker <username>
-
-$ sudo groupadd docker
-$ sudo usermod -aG docker alexandrebarros $USER
-
-$ newgrp docker
-$ docker run hello-world
-$ docker ps
-$ docker ps -a
-$ docker images
-$ docker logs --tail 20 [processIdNumber]
-$ docker restart
-
-# Reboot if still got error
-$ reboot
 ```
-## Install Fabric SDK for NodeJS
-The Hyperledger Fabric SDK allows applications to interact with a Fabric blockchain network. It provides a simple API to submit transactions to a ledger or query the contents of a ledger with minimal code.
-The client API is published to the npm registry in the fabric-network package.
-```
-npm install fabric-network
-```
-## Install Docker Images, Fabric Tools and Fabric Samples
-Clone from Github Hyperledger Fabric Samples.
-1. Run Docker on your machine
-2. Create a project folder and cd into it
-```
-mkdir new-network
-cd new-network
-```
-3. Run script:
-```
-curl -sSL https://bit.ly/2ysbOFE | bash -s -- 2.2.2 1.4.9
-
-# sudo curl -sSL https://goo.gl/6wtTN5 | sudo bash -s 1.1.0
-# curl -sSL https://raw.githubusercontent.com/hyperledger/fabric/master/scripts/bootstrap.sh | bash -s 1.1.0
-# sudo chmod 777 -R fabric-samples
-```
-
-Now you'll have:
-- Fabric-samples downloaded
-- Binary tools installed in /bin
-- Docker Images downloaded
 
 ## Featured Tech
 - **Hyperledger Fabric** (https://www.hyperledger.org/use/fabric) is intended as a foundation for developing applications or solutions with a modular architecture. Its modular and versatile design satisfies a broad range of industry use cases.
 - **Nodejs** (https://www.nodejs.org/) is an open-source, cross-platform JavaScript run-time environment that executes JavaScript code server-side.
 - **Docker** (https://www.docker.com/) is a computer program that performs operating-system-level virtualization, also known as Containerization.
 
-More info:
-- Docker - latest
-- Docker Compose - latest
-- NPM - latest
-- nvm - latest
-- Node.js - v14.17
-- HyperLedger Read the Docs
-- HyperLedger Test Network
+You can use your local docker containers or create a cloud account at IBM Cloud, Azure, AWS or Google Cloud Platform.
 
-You could use your local docker containers or create a cloud account in IBM Cloud, Azure, AWS or Google Cloud Platform.
-
-## 
 
 # Architecture
-
 ## Roles
 Profile  | Actions
 ------------- | ------------- 
 Insurance Manager | Activate, suspend and expire policies. 
 Insurance Worker | Suspend and expire policies. 
-Adjuster | Approve or decline claims.
-Bookkeeper | Pay out claims.
+Insurance Adjuster | Approve or decline claims.
+Insurance Bookkeeper | Pay out claims.
 Customer | Quote and select offers, add claims to active policies.
 Authority | read all customers policies and claims.
 
 <br />
 
 ## Functions
-Profile  | Actions
-------------- | ------------- 
-getOffers | Offchain process, ask for offers when quote is submmited.
-submitPolicy | Add selected offer to blockchain.
-activatePolicy | Changes policy state to ACTIVE.
-suspendPolicy | Changes policy state to SUSPENDED.
-expirePolicy | Changes policy state to EXPIRED.
-addClaim | Add claim to policy in the blockchain.
-reviewClaim | Changes claim state to DECLINED or ACCEPTED.
-payoutClaim | Changes claim state to PAID_OUT.
+Profile  | Actions | Roles
+------------- | ------------- | -------------
+getOffers | Offchain process, ask for offers when quote is submmited. | All.  Customers can get only their polcies and claims
+submitPolicy | Add selected offer to blockchain. | Customer
+activatePolicy | Changes policy state to ACTIVE. | Insurance Manager
+suspendPolicy | Changes policy state to SUSPENDED. | Insurance Manager and Worker
+expirePolicy | Changes policy state to EXPIRED. | Insurance Manager and Worker
+addClaim | Add claim to policy in the blockchain. | Customer
+reviewClaim | Changes claim state to DECLINED or ACCEPTED. | Insurance Adjuster
+payoutClaim | Changes claim state to PAID_OUT. | Insurance Bookkeeper
 <br />
 
 ## State Diagram
+<img src="./frontend/src/img/Hyperledger-Insurance-State.png">
 
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/Hyperlegder-Insurance-Flow.svg">
+## Complete Application Flowchart
 
-<br />
+<img src="./frontend/src/img/Hyperledger-Insurance-Flow.svg">
 
 ## Data
-The objects and properties.
+Insurance data (policies and claims) is stored in a private collection. Only the insurance company personnel and authorities may have access to this data. The public world state contains only the hash of the policy and its state. 
 
 Policy:
 ```json
-// Policy
 {
-    "Timestamp": '',
-    "PolicyNo": '',
-    "ClientID": '',
-    "InsuranceCompany": '',
-    "StartDate": '',
-    "EndDate": '',
+    "Timestamp": "",
+    "PolicyNo": "",
+    "ClientID": "",
+    "InsuranceCompany": "",
+    "StartDate": "",
+    "EndDate": "",
     "MainDriver": {
-        "FirstName": '', 
-        "LastName": '', 
-        "DriversLicenseNo": ''
+        "FirstName": "", 
+        "LastName": "", 
+        "DriversLicenseNo": ""
     },
     "Car": {
-        "Model": '',
-        "Year": '',
-        "LicensePlate": ''
+        "Model": "",
+        "Year": "",
+        "LicensePlate": ""
     },
     "Coverage": {
         "BodilyInjuryLiability":    defaultCoverage,
@@ -190,49 +149,63 @@ Policy:
     "Claims": [
         defaultClaim
     ],
-    "State": '' 
+    "State": "" 
 }
-}
+
 ```
 Default Coverage:
 ```json
-// defaultCoverage
 {
   "Active": false,  
   "CoveredAmount": 0, 
   "ClaimedToDate": 0
 }
 ```
-Default Claim:
+Claim:
 ```json
-// defaultClaim
 {
-  "Timestamp": '',  
-  "PolicyNo": '',
-  "ClaimNo": '',
-  "Description": '', 
-  "State": ''
+  "Timestamp": "",  
+  "PolicyNo": "",
+  "ClaimNo": "",
+  "Description": "", 
+  "State": ""
 }
 ```
 <br />
 
 
 ## Deploy & Run Application
-### Step 1. Start Hyperledger network, generate certificates and deploy the chaincode
-### Step 2. Install & Run Backend Server
-To execute both steps, in the root folder run the following command:
+### Step 1. Clone this repository and setup PATH variable
+```
+git clone https://github.com/kasperpawlowski/Hyperledger-Car-Insurance.git
+cd Hyperledger-Car-Insurance
+export PATH=$(pwd)/bin:$PATH
+```
+### Step 2. Setup environment variables
+- Rename ```.env.example``` file in the ```./backend``` directory to ```.env```
+- Change the BACKEND_URL variable setting your public IP number. Leave the port as 5986.
+### Step 3. Setup ports
+Make sure that ports 5984-5896 are accessible and not blocked by the firewall.
+- 5984 - couchDB database
+- 5985 - frontend app
+- 5986 - backend app
+### Step 4. Install the dependencies
+### Step 5. Start the Hyperledger network, deploy the chaincode and generate certificates for initial identities
+### Step 6. Run Backend Server
+To execute steps 4-6, in the root folder run the following command:
 ```
 ./setup.sh
 ```
-### Step 3. Install & Run Interface
+### Step 7. Run User Interface app
 In separate terminal, move to frontend folder and start the frontend locally:
 ```
-cd frontend/
-npm install
+cd Hyperledger-Car-Insurance/frontend/
 npm start
 ```
+### Step 8. Use the app
+Open the browser using the address provided in the .env file and port 5985. i.e. http://104.198.73.130:5985/
 ### Stop network
-To stop the network press ctrl+c in the terminal running backend server to stop it. Then run:
+To stop the network press `ctrl+c` in the terminal running backend server to stop it. Then run:
 ```
 cd network
 ./network.sh down
@@ -241,37 +214,37 @@ cd network
 
 ## User Interface
 Select user profile: 
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/1-UserTypeSelect.png">
+<img src="./frontend/src/img/screenshots/1-UserTypeSelect.png">
 With "Customer" profile selected, fill out the quote form:
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/2-QuoteForm.png">
+<img src="./frontend/src/img/screenshots/2-QuoteForm.png">
 After quote submission, different offers appear: 
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/3-SelectOffer.png">
+<img src="./frontend/src/img/screenshots/3-SelectOffer.png">
 Select one of the offers and click "pay":
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/4-PayOffer.png">
+<img src="./frontend/src/img/screenshots/4-PayOffer.png">
 In the Policies tab, Select "Insurance Manager" and activate the selected policy:
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/5-ActivatePolicy.png">
+<img src="./frontend/src/img/screenshots/5-ActivatePolicy.png">
 With "Customer" profile selected, click add claim: 
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/6-AddClaim.png">
+<img src="./frontend/src/img/screenshots/6-AddClaim.png">
 Fill the claim form with info about the incident:
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/6-ClaimForm.png">
+<img src="./frontend/src/img/screenshots/6-ClaimForm.png">
 "Insurance Worker" and "Insurance Manager" have access to expire or suspend the policy:
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/7-SuspendExpire.png">
+<img src="./frontend/src/img/screenshots/7-SuspendExpire.png">
 In the Claim tab, with "Insurance Adjuster" selected you can approve or decline the claim: 
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/8-ApproveDeclineClaim.png">
+<img src="./frontend/src/img/screenshots/8-ApproveDeclineClaim.png">
 To approve, fill the approved amounts:
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/9-ApprovedAmounts.png">
+<img src="./frontend/src/img/screenshots/9-ApprovedAmounts.png">
 If the claim was approved, select "Insurance Bookkeeper" profile and pay out the claim: 
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/10-PayoutClaim.png">
+<img src="./frontend/src/img/screenshots/10-PayoutClaim.png">
 The claim now appears with "Paid" status:
-<img src="https://github.com/kasperpawlowski/Hyperledger-Car-Insurance/blob/master/frontend/src/img/screenshots/11-PaidClaim.png">
+<img src="./frontend/src/img/screenshots/11-PaidClaim.png">
 <br />
 
-## Appendix
+
+# Appendix
 - Hyperledger Org: https://www.hyperledger.org/
 - Hyperledger Intro: https://hyperledger-fabric.readthedocs.io/en/latest/whatis.html
 - Hyperledger GitHub: https://github.com/hyperledger/fabric
 - Hyperledger Wiki: https://wiki.hyperledger.org/display/fabric
-- Hyperledger Explorer: https://github.com/hyperledger/blockchain-explorer
 - Using Private Data in Fabric: https://hyperledger-fabric.readthedocs.io/en/release-2.2/private_data_tutorial.html
-- Whiting your first Chaincode: https://hyperledger-fabric.readthedocs.io/en/release-2.2/chaincode4ade.html
+- Writing your first Chaincode: https://hyperledger-fabric.readthedocs.io/en/release-2.2/chaincode4ade.html
 - Private Data Collections on Hyperledger Fabric: https://github.com/IBM/private-data-collections-on-fabric

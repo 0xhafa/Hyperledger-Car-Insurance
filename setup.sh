@@ -3,10 +3,9 @@
 # install backend dependencies
 cd ./backend
 BACKEND_URL=$(cat .env | grep '(?<=BACKEND_URL=).*$' -Po)
+mkdir -p ./storage
 npm install
-cd ..
-
-cd ./network
+cd ../network
 
 # create a network with a channel and couch DB instance
 ./network.sh down
@@ -66,6 +65,7 @@ peer lifecycle chaincode querycommitted --channelID insurancechannel --name insu
 cd ../frontend
 npm install
 echo "{\"url\":\"$BACKEND_URL\"}" > ./src/backend.json
+npm install
 
 # remove previously created identities (if any) and create new ones
 cd ../backend
