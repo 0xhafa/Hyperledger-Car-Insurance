@@ -9,10 +9,7 @@ export default function Navbar(props) {
 	return (
 	<NavbarReact bg="light">
 	<Container>
-		<NavbarReact.Brand href="#">
-				<img src={logo} className="me-4 d-inline-block align-center" />
-    </NavbarReact.Brand>
-		<NavbarReact.Toggle aria-controls="basic-navbar-nav" width={70}/>
+		<NavbarReact.Toggle aria-controls="basic-navbar-nav" />
 		<NavbarReact.Collapse id="basic-navbar-nav">
 			<Nav className="m-auto">
 				<Nav.Link href="quotes">Quote</Nav.Link>
