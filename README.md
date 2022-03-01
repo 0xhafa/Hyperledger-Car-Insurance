@@ -31,8 +31,6 @@ The application enables the user to test its different functionalities using any
 ## Stakeholders
 The main stakeholders affected by this solution are the insurance companies, insurance customers and public authorities.
 
-<br />
-
 # Requirements
 ## Prerequisites
 The following prerequisites are required to run a Docker-based Fabric network on your local machine.
